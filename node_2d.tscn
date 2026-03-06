@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://c8yymy3r0u7f0"]
+
+[ext_resource type="Texture2D" uid="uid://c0hmydaaio1qm" path="res://scenes/jump.png" id="1_wtcfe"]
+
+[node name="Node2D" type="Node2D" unique_id=391175166]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1813621018]
+texture_filter = 1
+position = Vector2(-2.5, 0)
+scale = Vector2(0.9951172, 1)
+texture = ExtResource("1_wtcfe")
+hframes = 4
+vframes = 2
+frame = 7
