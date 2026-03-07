@@ -1,8 +1,19 @@
 [gd_scene format=3 uid="uid://c7yb7qu2ey772"]
 
 [ext_resource type="Script" uid="uid://c10q0ad46rhtq" path="res://scripts/level_manager.gd" id="1_06fa7"]
+[ext_resource type="Texture2D" uid="uid://cvykgexgbbato" path="res://assets/4_128x32.png" id="2_5eglo"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lbe5n"]
+texture = ExtResource("2_5eglo")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_5eglo"]
+tile_size = Vector2i(32, 32)
+sources/1 = SubResource("TileSetAtlasSource_lbe5n")
 
 [node name="LevelManager" type="Node2D" unique_id=93328618]
 script = ExtResource("1_06fa7")
