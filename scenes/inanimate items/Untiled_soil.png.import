@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://1xsw242cgg6h"
-path="res://.godot/imported/Soil1.png-2e474f52ec0df0d5a9e8a1304d1ebf48.ctex"
+uid="uid://po4tjynnvjrm"
+path="res://.godot/imported/Untiled_soil.png-a060b34f59c11ee165f3f691239846df.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://scenes/inanimate items/Soil1.png"
-dest_files=["res://.godot/imported/Soil1.png-2e474f52ec0df0d5a9e8a1304d1ebf48.ctex"]
+source_file="res://scenes/inanimate items/Untiled_soil.png"
+dest_files=["res://.godot/imported/Untiled_soil.png-a060b34f59c11ee165f3f691239846df.ctex"]
 
 [params]
 
