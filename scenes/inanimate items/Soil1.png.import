@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b0orotn5pelgn"
-path="res://.godot/imported/soil tiles2.png-a03a1d6c5b9057526fa95dddc998dc6c.ctex"
+uid="uid://6mmmm6eh8oou"
+path="res://.godot/imported/Soil1.png-2e474f52ec0df0d5a9e8a1304d1ebf48.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://scenes/inanimate items/soil tiles2.png"
-dest_files=["res://.godot/imported/soil tiles2.png-a03a1d6c5b9057526fa95dddc998dc6c.ctex"]
+source_file="res://scenes/inanimate items/Soil1.png"
+dest_files=["res://.godot/imported/Soil1.png-2e474f52ec0df0d5a9e8a1304d1ebf48.ctex"]
 
 [params]
 
