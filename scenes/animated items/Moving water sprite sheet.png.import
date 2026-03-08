@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cf1ku22nd1e63"
-path="res://.godot/imported/water tiles4.png-19e928ba8119a5c40b472b6ea0cb3450.ctex"
+uid="uid://ccbxfhx208vpb"
+path="res://.godot/imported/Moving water sprite sheet.png-e2274f71721b0fad1f9b8605eecfb20f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://scenes/animated items/water tiles4.png"
-dest_files=["res://.godot/imported/water tiles4.png-19e928ba8119a5c40b472b6ea0cb3450.ctex"]
+source_file="res://scenes/animated items/Moving water sprite sheet.png"
+dest_files=["res://.godot/imported/Moving water sprite sheet.png-e2274f71721b0fad1f9b8605eecfb20f.ctex"]
 
 [params]
 
