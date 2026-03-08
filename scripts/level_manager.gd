@@ -7,21 +7,29 @@ const GRID_HEIGHT = 10
 enum TileState {
 	DIRT = 0,
 	CROP = 1,
-	MIRROR = 2,
+	MIRROR_SLASH = 2,      # Tilts like /
 	TRENCH = 3,
 	OBSTACLE = 4,
-	PUMP = 5,           # The water source
-	WATERED_TRENCH = 6  # A trench currently filled with water
+	PUMP = 5,
+	WATERED_TRENCH = 6,
+	MIRROR_BACKSLASH = 7   # Tilts like \  # A trench currently filled with water
 }
 
 # Our 2D matrix
 var grid_data = []
 
 @onready var tilemap = $TileMapLayer
+@onready var light_layer = $LightLayer
+
+var light_start = Vector2i(0, 5)     # Starts at the left edge, middle row
+var light_direction = Vector2i(1, 0) # Moving right (x: 1, y: 0)
+
 var pump_pos = Vector2i(2, 0)
 func _ready():
 	print("Building the farm...") # <--- ADD THIS LINE
 	_initialize_grid()
+	calculate_water_flow()
+	calculate_light_beam()
 
 func _initialize_grid():
 	# Create a 2D array filled with DIRT (0)
@@ -30,12 +38,41 @@ func _initialize_grid():
 		for y in range(GRID_HEIGHT):
 			column.append(TileState.DIRT)
 			# Optional: Fill the visual tilemap with dirt tiles immediately
-			tilemap.set_cell(Vector2i(x, y), 1, Vector2i(0, 0)) 
+			tilemap.set_cell(Vector2i(x, y), 2, Vector2i(0, 0)) 
 		grid_data.append(column)
 	grid_data[pump_pos.x][pump_pos.y] = TileState.PUMP
 	# Optional: Draw a temporary visual for the pump (assuming it's at atlas 2,0)
 	tilemap.set_cell(pump_pos, 1, Vector2i(2, 0))
+	
+	var crop_pos = Vector2i(6, 5)
+	grid_data[crop_pos.x][crop_pos.y] = TileState.CROP
+	tilemap.set_cell(crop_pos, 1, Vector2i(2, 0))
+	# NEW: Place a Mirror at column 5, row 5
+	#var mirror_pos = Vector2i(5, 5)
+	#grid_data[mirror_pos.x][mirror_pos.y] = TileState.MIRROR_SLASH
+	#tilemap.set_cell(mirror_pos, 1, Vector2i(2, 0))
+	#
+	#tilemap.set_cell(mirror_pos, 1, Vector2i(1, 0))
+	# Mirror 1 (Takes the RIGHT beam and bounces it UP)
+	var m1 = Vector2i(3, 5)
+	grid_data[m1.x][m1.y] = TileState.MIRROR_SLASH
+	tilemap.set_cell(m1, 1, Vector2i(2, 0)) # Drawing your blue square
 
+	# Mirror 2 (Takes the UP beam and bounces it RIGHT)
+	var m2 = Vector2i(3, 2)
+	grid_data[m2.x][m2.y] = TileState.MIRROR_SLASH
+	tilemap.set_cell(m2, 1, Vector2i(2, 0))
+
+	# Mirror 3 (Takes the RIGHT beam and bounces it DOWN)
+	var m3 = Vector2i(8, 2)
+	grid_data[m3.x][m3.y] = TileState.MIRROR_BACKSLASH
+	tilemap.set_cell(m3, 1, Vector2i(2, 0))
+
+	# Mirror 4 (Takes the DOWN beam and bounces it LEFT, hitting the Crop!)
+	var m4 = Vector2i(8, 5)
+	grid_data[m4.x][m4.y] = TileState.MIRROR_SLASH
+	tilemap.set_cell(m4, 1, Vector2i(2, 0))
+	
 func _unhandled_input(event):
 	if event is InputEventMouseButton and event.pressed:
 		var mouse_pos = get_global_mouse_position()
@@ -62,6 +99,18 @@ func interact_with_cell(x: int, y: int):
 		print("Dug a trench at: ", x, ", ", y)
 		
 		calculate_water_flow()
+		calculate_light_beam()
+	
+	elif grid_data[x][y] == TileState.MIRROR_SLASH:
+		grid_data[x][y] = TileState.MIRROR_BACKSLASH
+		print("Rotated mirror to \\")
+		calculate_light_beam() # Recalculate the laser!
+	elif grid_data[x][y] == TileState.MIRROR_BACKSLASH:
+		grid_data[x][y] = TileState.MIRROR_SLASH
+		print("Rotated mirror to /")
+		calculate_light_beam()
+	
+	
 func calculate_water_flow():
 	# 1. THE RESET: Dry up all existing water first
 	for x in range(GRID_WIDTH):
@@ -103,6 +152,7 @@ func calculate_water_flow():
 					
 					# Add this newly wet trench to the queue so water can spread FROM it
 					queue.append(Vector2i(neighbor_x, neighbor_y))
+	update_crops()
 
 func fill_trench(x: int, y: int):
 	# Make sure we are only filling in trenches, not the pump or existing dirt
@@ -112,8 +162,70 @@ func fill_trench(x: int, y: int):
 		
 		# 2. Update the visual back to the Red Square (Atlas 0,0). 
 		# Note: Make sure the Source ID here (the middle number) matches the '1' you used to fix the invisible tiles!
-		tilemap.set_cell(Vector2i(x, y), 1, Vector2i(0, 0))
+		tilemap.set_cell(Vector2i(x, y), 2, Vector2i(0, 0))
 		print("Filled trench at: ", x, ", ", y)
 		
 		# 3. Recalculate! This will instantly dry up any yellow trenches that are no longer connected to the pump.
 		calculate_water_flow()
+		calculate_light_beam()
+
+func update_crops():
+	var directions = [
+		Vector2i(1, 0), Vector2i(-1, 0), 
+		Vector2i(0, 1), Vector2i(0, -1)
+	]
+	
+	# Sweep the entire board looking for crops
+	for x in range(GRID_WIDTH):
+		for y in range(GRID_HEIGHT):
+			if grid_data[x][y] == TileState.CROP:
+				var is_watered = false
+				
+				# Check the 4 tiles immediately around the crop
+				for dir in directions:
+					var neighbor_x = x + dir.x
+					var neighbor_y = y + dir.y
+					
+					# Make sure we don't check off the edge of the screen
+					if _is_within_bounds(neighbor_x, neighbor_y):
+						if grid_data[neighbor_x][neighbor_y] == TileState.WATERED_TRENCH:
+							is_watered = true
+							break # We found water! Stop checking the other sides.
+				
+				# Report the status to the Output window
+				if is_watered:
+					print("Crop at ", x, ",", y, " is WATERED ")
+					# Later: tilemap.set_cell(..., Stage 4 Plant Sprite)
+				else:
+					print("Crop at ", x, ",", y, " is DRY ")
+					# Later: tilemap.set_cell(..., Stage 1 Dirt Sprite)
+func calculate_light_beam():
+	# 1. THE RESET: Clear all old light from the glass layer
+	light_layer.clear()
+	
+	# 2. THE SETUP: Start at the source
+	var current_pos = light_start
+	var current_dir = light_direction
+	
+	# 3. THE BEAM: Keep moving forward until we hit the edge of the map
+	while _is_within_bounds(current_pos.x, current_pos.y):
+		
+		light_layer.set_cell(current_pos, 0, Vector2i(3, 0))
+		var cell_under_light = grid_data[current_pos.x][current_pos.y]
+		
+		# If it hits a '/' mirror
+		if cell_under_light == TileState.MIRROR_SLASH:
+			current_dir = Vector2i(-current_dir.y, -current_dir.x) 
+			print("Light bounced off / at: ", current_pos)
+		
+		# If it hits a '\' mirror
+		elif cell_under_light == TileState.MIRROR_BACKSLASH:
+			current_dir = Vector2i(current_dir.y, current_dir.x)
+			print("Light bounced off \\ at: ", current_pos)
+		
+		# If it hits a Crop
+		elif cell_under_light == TileState.CROP:
+			print("Light is shining on the Crop!")
+			
+		# Take one step forward in whatever the current direction is
+		current_pos += current_dir
