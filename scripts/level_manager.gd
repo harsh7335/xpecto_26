@@ -12,7 +12,8 @@ enum TileState {
 	OBSTACLE = 4,
 	PUMP = 5,
 	WATERED_TRENCH = 6,
-	MIRROR_BACKSLASH = 7   # Tilts like \  # A trench currently filled with water
+	MIRROR_BACKSLASH = 7,
+	PEST = 8   # Tilts like \  # A trench currently filled with water
 }
 
 # Our 2D matrix
@@ -47,13 +48,7 @@ func _initialize_grid():
 	var crop_pos = Vector2i(6, 5)
 	grid_data[crop_pos.x][crop_pos.y] = TileState.CROP
 	tilemap.set_cell(crop_pos, 1, Vector2i(2, 0))
-	# NEW: Place a Mirror at column 5, row 5
-	#var mirror_pos = Vector2i(5, 5)
-	#grid_data[mirror_pos.x][mirror_pos.y] = TileState.MIRROR_SLASH
-	#tilemap.set_cell(mirror_pos, 1, Vector2i(2, 0))
-	#
-	#tilemap.set_cell(mirror_pos, 1, Vector2i(1, 0))
-	# Mirror 1 (Takes the RIGHT beam and bounces it UP)
+	
 	var m1 = Vector2i(3, 5)
 	grid_data[m1.x][m1.y] = TileState.MIRROR_SLASH
 	tilemap.set_cell(m1, 1, Vector2i(2, 0)) # Drawing your blue square
@@ -72,6 +67,12 @@ func _initialize_grid():
 	var m4 = Vector2i(8, 5)
 	grid_data[m4.x][m4.y] = TileState.MIRROR_SLASH
 	tilemap.set_cell(m4, 1, Vector2i(2, 0))
+	
+	var pest_pos = Vector2i(7, 5)
+	grid_data[pest_pos.x][pest_pos.y] = TileState.PEST
+	tilemap.set_cell(pest_pos, 1, Vector2i(0, 0))
+	
+	
 	
 func _unhandled_input(event):
 	if event is InputEventMouseButton and event.pressed:
@@ -100,6 +101,7 @@ func interact_with_cell(x: int, y: int):
 		
 		calculate_water_flow()
 		calculate_light_beam()
+	
 	
 	elif grid_data[x][y] == TileState.MIRROR_SLASH:
 		grid_data[x][y] = TileState.MIRROR_BACKSLASH
@@ -215,17 +217,46 @@ func calculate_light_beam():
 		
 		# If it hits a '/' mirror
 		if cell_under_light == TileState.MIRROR_SLASH:
-			current_dir = Vector2i(-current_dir.y, -current_dir.x) 
-			print("Light bounced off / at: ", current_pos)
+			if is_powered(current_pos.x, current_pos.y):
+				current_dir = Vector2i(-current_dir.y, -current_dir.x) 
+				print("Powered / mirror reflected light!")
+			else:
+				print("Unpowered / mirror ignored light.")
 		
 		# If it hits a '\' mirror
 		elif cell_under_light == TileState.MIRROR_BACKSLASH:
-			current_dir = Vector2i(current_dir.y, current_dir.x)
-			print("Light bounced off \\ at: ", current_pos)
+			if is_powered(current_pos.x, current_pos.y):
+				current_dir = Vector2i(current_dir.y, current_dir.x)
+				print("Powered \\ mirror reflected light!")
+			else:
+				print("Unpowered \\ mirror ignored light.")
 		
 		# If it hits a Crop
 		elif cell_under_light == TileState.CROP:
 			print("Light is shining on the Crop!")
-			
+		
+		elif cell_under_light == TileState.PEST:
+			print("ZAPPED A PEST at: ", current_pos, "!")
+			grid_data[current_pos.x][current_pos.y] = TileState.DIRT
+			tilemap.set_cell(current_pos, 2, Vector2i(0, 0))
+			break
 		# Take one step forward in whatever the current direction is
 		current_pos += current_dir
+
+func is_powered(x: int, y: int) -> bool:
+	var directions = [
+		Vector2i(1, 0), Vector2i(-1, 0), 
+		Vector2i(0, 1), Vector2i(0, -1)
+	]
+	
+	# Check all 4 neighbors
+	for dir in directions:
+		var neighbor_x = x + dir.x
+		var neighbor_y = y + dir.y
+		
+		if _is_within_bounds(neighbor_x, neighbor_y):
+			if grid_data[neighbor_x][neighbor_y] == TileState.WATERED_TRENCH:
+				return true # Found water!
+				
+	return false # No water found
+	

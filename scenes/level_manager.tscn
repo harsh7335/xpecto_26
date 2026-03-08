@@ -48,4 +48,5 @@ script = ExtResource("1_06fa7")
 tile_set = SubResource("TileSet_5eglo")
 
 [node name="LightLayer" type="TileMapLayer" parent="." unique_id=1438241068]
+modulate = Color(1, 1, 1, 0.3882353)
 tile_set = SubResource("TileSet_kq0y1")
