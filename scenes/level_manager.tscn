@@ -2,8 +2,9 @@
 
 [ext_resource type="Script" uid="uid://c10q0ad46rhtq" path="res://scripts/level_manager.gd" id="1_06fa7"]
 [ext_resource type="Texture2D" uid="uid://h0phalgf1tq6" path="res://assets/4_64X64.png" id="2_lbe5n"]
-[ext_resource type="Texture2D" uid="uid://1xsw242cgg6h" path="res://# Stuff I make/Soil1.png" id="3_lbe5n"]
+[ext_resource type="Texture2D" uid="uid://1xsw242cgg6h" path="res://scenes/inanimate items/Soil1.png" id="3_lbe5n"]
 [ext_resource type="Texture2D" uid="uid://cmu3yk70da4gl" path="res://assets/WHITE64X64.png" id="4_2yrkd"]
+
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kfnik"]
 texture = ExtResource("2_lbe5n")
