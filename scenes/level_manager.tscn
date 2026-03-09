@@ -41,6 +41,18 @@ tile_size = Vector2i(32, 32)
 sources/1 = SubResource("TileSetAtlasSource_6dptc")
 sources/2 = SubResource("TileSetAtlasSource_2yrkd")
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kfnik"]
+texture = ExtResource("2_kfnik")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_dpnu2"]
+tile_size = Vector2i(32, 32)
+sources/0 = SubResource("TileSetAtlasSource_kfnik")
+
 [node name="LevelManager" type="Node2D" unique_id=93328618]
 script = ExtResource("1_06fa7")
 
@@ -50,3 +62,12 @@ tile_set = SubResource("TileSet_5eglo")
 [node name="LightLayer" type="TileMapLayer" parent="." unique_id=1438241068]
 modulate = Color(1, 1, 1, 0.3882353)
 tile_set = SubResource("TileSet_kq0y1")
+
+[node name="HighlightLayer" type="TileMapLayer" parent="." unique_id=478829054]
+tile_set = SubResource("TileSet_dpnu2")
+
+[node name="Timer" type="Timer" parent="HighlightLayer" unique_id=1698491585]
+wait_time = 0.5
+autostart = true
+
+[connection signal="timeout" from="HighlightLayer/Timer" to="." method="_on_timer_timeout"]

@@ -26,11 +26,19 @@ var light_start = Vector2i(0, 5)     # Starts at the left edge, middle row
 var light_direction = Vector2i(1, 0) # Moving right (x: 1, y: 0)
 
 var pump_pos = Vector2i(2, 0)
+
+@onready var highlight_layer = $HighlightLayer
+
+var active_pests = []
+var active_crops = []
+
+
 func _ready():
 	print("Building the farm...") # <--- ADD THIS LINE
 	_initialize_grid()
 	calculate_water_flow()
 	calculate_light_beam()
+	calculate_pest_intents()
 
 func _initialize_grid():
 	# Create a 2D array filled with DIRT (0)
@@ -45,9 +53,10 @@ func _initialize_grid():
 	# Optional: Draw a temporary visual for the pump (assuming it's at atlas 2,0)
 	tilemap.set_cell(pump_pos, 0, Vector2i(2, 0))
 	
-	var crop_pos = Vector2i(6, 5)
+	var crop_pos = Vector2i(6, 2)
 	grid_data[crop_pos.x][crop_pos.y] = TileState.CROP
 	tilemap.set_cell(crop_pos, 0, Vector2i(2, 0))
+	active_crops.append(crop_pos)
 	
 	var m1 = Vector2i(3, 5)
 	grid_data[m1.x][m1.y] = TileState.MIRROR_SLASH
@@ -68,10 +77,14 @@ func _initialize_grid():
 	grid_data[m4.x][m4.y] = TileState.MIRROR_SLASH
 	tilemap.set_cell(m4, 0, Vector2i(2, 0))
 	
-	var pest_pos = Vector2i(7, 5)
+	var pest_pos = Vector2i(7, 2)
 	grid_data[pest_pos.x][pest_pos.y] = TileState.PEST
 	tilemap.set_cell(pest_pos, 0, Vector2i(0, 0))
-	
+	active_pests.append({
+		"current_pos": pest_pos,
+		"next_pos": pest_pos, # Default to staying still
+		"alive": true
+	})
 	
 	
 func _unhandled_input(event):
@@ -260,3 +273,38 @@ func is_powered(x: int, y: int) -> bool:
 				
 	return false # No water found
 	
+
+func calculate_pest_intents():
+	highlight_layer.clear()
+	var directions = [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
+	
+	for pest in active_pests:
+		if not pest["alive"]:
+			continue
+		var current = pest["current_pos"]
+		var best_move = current
+		var shortest_dist = 99999
+		
+		var target_crop = current 
+		var min_crop_dist = 99999
+		for crop in active_crops:
+			var d = abs(crop.x - current.x) + abs(crop.y - current.y)
+			if d < min_crop_dist:
+				min_crop_dist = d
+				target_crop = crop
+		for dir in directions:
+			var neighbor = current + dir
+			if _is_within_bounds(neighbor.x, neighbor.y):
+				if grid_data[neighbor.x][neighbor.y] == TileState.DIRT:
+					var dist_to_crop = abs(target_crop.x - neighbor.x) + abs(target_crop.y - neighbor.y)
+					
+					if dist_to_crop < shortest_dist:
+						shortest_dist = dist_to_crop
+						best_move = neighbor
+		pest["next_pos"] = best_move
+		if best_move != current:
+			highlight_layer.set_cell(best_move, 0, Vector2i(0, 0))
+
+
+func _on_timer_timeout() -> void:
+	highlight_layer.visible = !highlight_layer.visible
