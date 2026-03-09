@@ -39,38 +39,38 @@ func _initialize_grid():
 		for y in range(GRID_HEIGHT):
 			column.append(TileState.DIRT)
 			# Optional: Fill the visual tilemap with dirt tiles immediately
-			tilemap.set_cell(Vector2i(x, y), 2, Vector2i(0, 0)) 
+			tilemap.set_cell(Vector2i(x, y), 1, Vector2i(0, 0)) 
 		grid_data.append(column)
 	grid_data[pump_pos.x][pump_pos.y] = TileState.PUMP
 	# Optional: Draw a temporary visual for the pump (assuming it's at atlas 2,0)
-	tilemap.set_cell(pump_pos, 1, Vector2i(2, 0))
+	tilemap.set_cell(pump_pos, 0, Vector2i(2, 0))
 	
 	var crop_pos = Vector2i(6, 5)
 	grid_data[crop_pos.x][crop_pos.y] = TileState.CROP
-	tilemap.set_cell(crop_pos, 1, Vector2i(2, 0))
+	tilemap.set_cell(crop_pos, 0, Vector2i(2, 0))
 	
 	var m1 = Vector2i(3, 5)
 	grid_data[m1.x][m1.y] = TileState.MIRROR_SLASH
-	tilemap.set_cell(m1, 1, Vector2i(2, 0)) # Drawing your blue square
+	tilemap.set_cell(m1, 0, Vector2i(2, 0)) # Drawing your blue square
 
 	# Mirror 2 (Takes the UP beam and bounces it RIGHT)
 	var m2 = Vector2i(3, 2)
 	grid_data[m2.x][m2.y] = TileState.MIRROR_SLASH
-	tilemap.set_cell(m2, 1, Vector2i(2, 0))
+	tilemap.set_cell(m2, 0, Vector2i(2, 0))
 
 	# Mirror 3 (Takes the RIGHT beam and bounces it DOWN)
 	var m3 = Vector2i(8, 2)
 	grid_data[m3.x][m3.y] = TileState.MIRROR_BACKSLASH
-	tilemap.set_cell(m3, 1, Vector2i(2, 0))
+	tilemap.set_cell(m3, 0, Vector2i(2, 0))
 
 	# Mirror 4 (Takes the DOWN beam and bounces it LEFT, hitting the Crop!)
 	var m4 = Vector2i(8, 5)
 	grid_data[m4.x][m4.y] = TileState.MIRROR_SLASH
-	tilemap.set_cell(m4, 1, Vector2i(2, 0))
+	tilemap.set_cell(m4, 0, Vector2i(2, 0))
 	
 	var pest_pos = Vector2i(7, 5)
 	grid_data[pest_pos.x][pest_pos.y] = TileState.PEST
-	tilemap.set_cell(pest_pos, 1, Vector2i(0, 0))
+	tilemap.set_cell(pest_pos, 0, Vector2i(0, 0))
 	
 	
 	
@@ -96,7 +96,7 @@ func interact_with_cell(x: int, y: int):
 		
 		# Update the visual TileMapLayer 
 		# (Vector2i(x,y) is location, 0 is source_id, Vector2i(1,0) is the trench atlas coordinate)
-		tilemap.set_cell(Vector2i(x, y), 1, Vector2i(1, 0))
+		tilemap.set_cell(Vector2i(x, y), 0, Vector2i(1, 0))
 		print("Dug a trench at: ", x, ", ", y)
 		
 		calculate_water_flow()
@@ -120,7 +120,7 @@ func calculate_water_flow():
 			if grid_data[x][y] == TileState.WATERED_TRENCH:
 				grid_data[x][y] = TileState.TRENCH
 				# Draw the dry trench texture (assuming atlas 1,0)
-				tilemap.set_cell(Vector2i(x, y), 1, Vector2i(1, 0))
+				tilemap.set_cell(Vector2i(x, y), 0, Vector2i(1, 0))
 
 	# 2. THE SETUP: Create a queue for our BFS, starting at the pump
 	var queue = []
@@ -150,7 +150,7 @@ func calculate_water_flow():
 					grid_data[neighbor_x][neighbor_y] = TileState.WATERED_TRENCH
 					
 					# Update the visual (assuming wet trench is at atlas 3,0)
-					tilemap.set_cell(Vector2i(neighbor_x, neighbor_y), 1, Vector2i(3, 0))
+					tilemap.set_cell(Vector2i(neighbor_x, neighbor_y), 0, Vector2i(3, 0))
 					
 					# Add this newly wet trench to the queue so water can spread FROM it
 					queue.append(Vector2i(neighbor_x, neighbor_y))
@@ -164,7 +164,7 @@ func fill_trench(x: int, y: int):
 		
 		# 2. Update the visual back to the Red Square (Atlas 0,0). 
 		# Note: Make sure the Source ID here (the middle number) matches the '1' you used to fix the invisible tiles!
-		tilemap.set_cell(Vector2i(x, y), 2, Vector2i(0, 0))
+		tilemap.set_cell(Vector2i(x, y), 1, Vector2i(0, 0))
 		print("Filled trench at: ", x, ", ", y)
 		
 		# 3. Recalculate! This will instantly dry up any yellow trenches that are no longer connected to the pump.
@@ -212,7 +212,7 @@ func calculate_light_beam():
 	# 3. THE BEAM: Keep moving forward until we hit the edge of the map
 	while _is_within_bounds(current_pos.x, current_pos.y):
 		
-		light_layer.set_cell(current_pos, 0, Vector2i(3, 0))
+		light_layer.set_cell(current_pos, 2, Vector2i(3, 0))
 		var cell_under_light = grid_data[current_pos.x][current_pos.y]
 		
 		# If it hits a '/' mirror
@@ -238,7 +238,7 @@ func calculate_light_beam():
 		elif cell_under_light == TileState.PEST:
 			print("ZAPPED A PEST at: ", current_pos, "!")
 			grid_data[current_pos.x][current_pos.y] = TileState.DIRT
-			tilemap.set_cell(current_pos, 2, Vector2i(0, 0))
+			tilemap.set_cell(current_pos, 1, Vector2i(0, 0))
 			break
 		# Take one step forward in whatever the current direction is
 		current_pos += current_dir
