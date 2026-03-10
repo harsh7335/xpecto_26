@@ -77,7 +77,7 @@ func _initialize_grid():
 	grid_data[m4.x][m4.y] = TileState.MIRROR_SLASH
 	tilemap.set_cell(m4, 0, Vector2i(2, 0))
 	
-	var pest_pos = Vector2i(7, 2)
+	var pest_pos = Vector2i(9, 2)
 	grid_data[pest_pos.x][pest_pos.y] = TileState.PEST
 	tilemap.set_cell(pest_pos, 0, Vector2i(0, 0))
 	active_pests.append({
@@ -88,6 +88,9 @@ func _initialize_grid():
 	
 	
 func _unhandled_input(event):
+	if event.is_action_pressed("ui_accept"): 
+		execute_enemy_turn()
+	
 	if event is InputEventMouseButton and event.pressed:
 		var mouse_pos = get_global_mouse_position()
 		var grid_pos = tilemap.local_to_map(mouse_pos)
@@ -252,6 +255,10 @@ func calculate_light_beam():
 			print("ZAPPED A PEST at: ", current_pos, "!")
 			grid_data[current_pos.x][current_pos.y] = TileState.DIRT
 			tilemap.set_cell(current_pos, 1, Vector2i(0, 0))
+			for pest in active_pests:
+				if pest["current_pos"] == current_pos:
+					pest["alive"] = false
+			calculate_pest_intents()
 			break
 		# Take one step forward in whatever the current direction is
 		current_pos += current_dir
@@ -283,7 +290,7 @@ func calculate_pest_intents():
 			continue
 		var current = pest["current_pos"]
 		var best_move = current
-		var shortest_dist = 99999
+
 		
 		var target_crop = current 
 		var min_crop_dist = 99999
@@ -292,6 +299,7 @@ func calculate_pest_intents():
 			if d < min_crop_dist:
 				min_crop_dist = d
 				target_crop = crop
+		var shortest_dist = min_crop_dist
 		for dir in directions:
 			var neighbor = current + dir
 			if _is_within_bounds(neighbor.x, neighbor.y):
@@ -308,3 +316,19 @@ func calculate_pest_intents():
 
 func _on_timer_timeout() -> void:
 	highlight_layer.visible = !highlight_layer.visible
+
+func execute_enemy_turn():
+	print("--- ENEMY TURN EXECUTING ---")
+	for pest in active_pests:
+		if not pest["alive"]:
+			continue
+		var current = pest["current_pos"]
+		var next = pest["next_pos"]
+		if current != next:
+			grid_data[current.x][current.y] = TileState.DIRT
+			tilemap.set_cell(current, 2, Vector2i(0, 0))
+			grid_data[next.x][next.y] = TileState.PEST
+			tilemap.set_cell(next, 1, Vector2i(0, 0))
+			pest["current_pos"] = next
+	calculate_pest_intents()
+	calculate_light_beam()
