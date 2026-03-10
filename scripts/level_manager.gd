@@ -3,19 +3,43 @@ extends Node2D
 const GRID_WIDTH = 12
 const GRID_HEIGHT = 10
 
-# Dictionary for readability
+const ID_DIRT1 = 2
+const ID_DIRT2 = 3
+const ID_CROP = 7
+const ID_MIRROR_SLASH = 5
+const ID_MIRROR_BACKSLASH = 6
+const ID_PUMP = 8
+const ID_PEST = 9
+
 enum TileState {
-	DIRT = 0,
+	DIRT = 0,             # Dirt 1 and Dirt 2 both map to this!
 	CROP = 1,
-	MIRROR_SLASH = 2,      # Tilts like /
+	MIRROR_SLASH = 2,
 	TRENCH = 3,
 	OBSTACLE = 4,
 	PUMP = 5,
 	WATERED_TRENCH = 6,
 	MIRROR_BACKSLASH = 7,
-	PEST = 8   # Tilts like \  # A trench currently filled with water
+	PEST = 8
 }
-
+var trench_graphics_map = {
+	0: 14,  # No connections (Standalone dot)
+	1: 14,  # Only Up (End piece)
+	2: 14,  # Only Right (End piece)
+	3: 10,  # Up + Right (Bottom-Left Corner) -> Your "B-L_cor"
+	4: 14,  # Only Down (End piece)
+	5: 9,  # Up + Down (Vertical Straight)
+	6: 11,  # Right + Down (Top-Left Corner) -> Your "T-L_cor"
+	7: 15,  # Up + Right + Down (T-Junction)
+	8: 14,  # Only Left (End piece)
+	9: 12,  # Up + Left (Bottom-Right Corner) -> Your "B-R_cor"
+	10: 9, # Right + Left (Horizontal Straight)
+	11: 15, # Up + Right + Left (T-Junction)
+	12: 13, # Down + Left (Top-Right Corner) -> Your "T-R_cor"
+	13: 15, # Up + Down + Left (T-Junction)
+	14: 15, # Right + Down + Left (T-Junction)
+	15: 15  # All 4 directions (Crossroads)
+}
 # Our 2D matrix
 var grid_data = []
 
@@ -39,52 +63,102 @@ func _ready():
 	calculate_water_flow()
 	calculate_light_beam()
 	calculate_pest_intents()
+	update_trench_visuals()
 
+#func _initialize_grid():
+	## Create a 2D array filled with DIRT (0)
+	#for x in range(GRID_WIDTH):
+		#var column = []
+		#for y in range(GRID_HEIGHT):
+			#column.append(TileState.DIRT)
+			## Optional: Fill the visual tilemap with dirt tiles immediately
+			#tilemap.set_cell(Vector2i(x, y), 1, Vector2i(0, 0)) 
+		#grid_data.append(column)
+	#grid_data[pump_pos.x][pump_pos.y] = TileState.PUMP
+	## Optional: Draw a temporary visual for the pump (assuming it's at atlas 2,0)
+	#tilemap.set_cell(pump_pos, 0, Vector2i(2, 0))
+	#
+	#var crop_pos = Vector2i(6, 2)
+	#grid_data[crop_pos.x][crop_pos.y] = TileState.CROP
+	#tilemap.set_cell(crop_pos, 0, Vector2i(2, 0))
+	#active_crops.append(crop_pos)
+	#
+	#var m1 = Vector2i(3, 5)
+	#grid_data[m1.x][m1.y] = TileState.MIRROR_SLASH
+	#tilemap.set_cell(m1, 0, Vector2i(2, 0)) # Drawing your blue square
+#
+	## Mirror 2 (Takes the UP beam and bounces it RIGHT)
+	#var m2 = Vector2i(3, 2)
+	#grid_data[m2.x][m2.y] = TileState.MIRROR_SLASH
+	#tilemap.set_cell(m2, 0, Vector2i(2, 0))
+#
+	## Mirror 3 (Takes the RIGHT beam and bounces it DOWN)
+	#var m3 = Vector2i(8, 2)
+	#grid_data[m3.x][m3.y] = TileState.MIRROR_BACKSLASH
+	#tilemap.set_cell(m3, 0, Vector2i(2, 0))
+#
+	## Mirror 4 (Takes the DOWN beam and bounces it LEFT, hitting the Crop!)
+	#var m4 = Vector2i(8, 5)
+	#grid_data[m4.x][m4.y] = TileState.MIRROR_SLASH
+	#tilemap.set_cell(m4, 0, Vector2i(2, 0))
+	#
+	#var pest_pos = Vector2i(6, 8)
+	#grid_data[pest_pos.x][pest_pos.y] = TileState.PEST
+	#tilemap.set_cell(pest_pos, 0, Vector2i(0, 0))
+	#active_pests.append({
+		#"current_pos": pest_pos,
+		#"next_pos": pest_pos, # Default to staying still
+		#"alive": true
+	#})
 func _initialize_grid():
-	# Create a 2D array filled with DIRT (0)
+	# 1. Clear out any old data (great for when you add a "Restart Level" button later!)
+	grid_data.clear()
+	active_pests.clear()
+	active_crops.clear()
+	
+	# 2. Sweep the entire board from top-left to bottom-right
 	for x in range(GRID_WIDTH):
 		var column = []
 		for y in range(GRID_HEIGHT):
-			column.append(TileState.DIRT)
-			# Optional: Fill the visual tilemap with dirt tiles immediately
-			tilemap.set_cell(Vector2i(x, y), 1, Vector2i(0, 0)) 
+			var cell_pos = Vector2i(x, y)
+			var source_id = tilemap.get_cell_source_id(cell_pos)
+			
+			# Default logical state is Dirt
+			var state = TileState.DIRT
+			
+			# Check the Source ID to figure out what object this is
+			if source_id == ID_CROP:
+				state = TileState.CROP
+				active_crops.append(cell_pos)
+				
+			elif source_id == ID_MIRROR_SLASH:
+				state = TileState.MIRROR_SLASH
+				
+			elif source_id == ID_MIRROR_BACKSLASH:
+				state = TileState.MIRROR_BACKSLASH
+				
+			elif source_id == ID_PEST:
+				state = TileState.PEST
+				active_pests.append({
+					"current_pos": cell_pos,
+					"next_pos": cell_pos, 
+					"alive": true
+				})
+				
+			elif source_id == ID_PUMP:
+				state = TileState.PUMP
+				pump_pos = cell_pos 
+			
+			# NEW: The scanner doesn't need to change the visual for dirt! 
+			# It just needs to record it logically.
+				
+			column.append(state)
+			
+			# Safety net: If you left a cell completely blank (-1), paint Dirt 1 there as a fallback
+			if source_id == -1:
+				tilemap.set_cell(cell_pos, ID_DIRT1, Vector2i(0, 0))
+				
 		grid_data.append(column)
-	grid_data[pump_pos.x][pump_pos.y] = TileState.PUMP
-	# Optional: Draw a temporary visual for the pump (assuming it's at atlas 2,0)
-	tilemap.set_cell(pump_pos, 0, Vector2i(2, 0))
-	
-	var crop_pos = Vector2i(6, 2)
-	grid_data[crop_pos.x][crop_pos.y] = TileState.CROP
-	tilemap.set_cell(crop_pos, 0, Vector2i(2, 0))
-	active_crops.append(crop_pos)
-	
-	var m1 = Vector2i(3, 5)
-	grid_data[m1.x][m1.y] = TileState.MIRROR_SLASH
-	tilemap.set_cell(m1, 0, Vector2i(2, 0)) # Drawing your blue square
-
-	# Mirror 2 (Takes the UP beam and bounces it RIGHT)
-	var m2 = Vector2i(3, 2)
-	grid_data[m2.x][m2.y] = TileState.MIRROR_SLASH
-	tilemap.set_cell(m2, 0, Vector2i(2, 0))
-
-	# Mirror 3 (Takes the RIGHT beam and bounces it DOWN)
-	var m3 = Vector2i(8, 2)
-	grid_data[m3.x][m3.y] = TileState.MIRROR_BACKSLASH
-	tilemap.set_cell(m3, 0, Vector2i(2, 0))
-
-	# Mirror 4 (Takes the DOWN beam and bounces it LEFT, hitting the Crop!)
-	var m4 = Vector2i(8, 5)
-	grid_data[m4.x][m4.y] = TileState.MIRROR_SLASH
-	tilemap.set_cell(m4, 0, Vector2i(2, 0))
-	
-	var pest_pos = Vector2i(9, 2)
-	grid_data[pest_pos.x][pest_pos.y] = TileState.PEST
-	tilemap.set_cell(pest_pos, 0, Vector2i(0, 0))
-	active_pests.append({
-		"current_pos": pest_pos,
-		"next_pos": pest_pos, # Default to staying still
-		"alive": true
-	})
 	
 	
 func _unhandled_input(event):
@@ -110,9 +184,6 @@ func interact_with_cell(x: int, y: int):
 	if grid_data[x][y] == TileState.DIRT:
 		grid_data[x][y] = TileState.TRENCH
 		
-		# Update the visual TileMapLayer 
-		# (Vector2i(x,y) is location, 0 is source_id, Vector2i(1,0) is the trench atlas coordinate)
-		tilemap.set_cell(Vector2i(x, y), 0, Vector2i(1, 0))
 		print("Dug a trench at: ", x, ", ", y)
 		
 		calculate_water_flow()
@@ -135,8 +206,7 @@ func calculate_water_flow():
 		for y in range(GRID_HEIGHT):
 			if grid_data[x][y] == TileState.WATERED_TRENCH:
 				grid_data[x][y] = TileState.TRENCH
-				# Draw the dry trench texture (assuming atlas 1,0)
-				tilemap.set_cell(Vector2i(x, y), 0, Vector2i(1, 0))
+				
 
 	# 2. THE SETUP: Create a queue for our BFS, starting at the pump
 	var queue = []
@@ -165,12 +235,12 @@ func calculate_water_flow():
 					# Update the logic
 					grid_data[neighbor_x][neighbor_y] = TileState.WATERED_TRENCH
 					
-					# Update the visual (assuming wet trench is at atlas 3,0)
-					tilemap.set_cell(Vector2i(neighbor_x, neighbor_y), 0, Vector2i(3, 0))
+				
 					
 					# Add this newly wet trench to the queue so water can spread FROM it
 					queue.append(Vector2i(neighbor_x, neighbor_y))
 	update_crops()
+	update_trench_visuals()
 
 func fill_trench(x: int, y: int):
 	# Make sure we are only filling in trenches, not the pump or existing dirt
@@ -180,12 +250,13 @@ func fill_trench(x: int, y: int):
 		
 		# 2. Update the visual back to the Red Square (Atlas 0,0). 
 		# Note: Make sure the Source ID here (the middle number) matches the '1' you used to fix the invisible tiles!
-		tilemap.set_cell(Vector2i(x, y), 1, Vector2i(0, 0))
+		
 		print("Filled trench at: ", x, ", ", y)
 		
 		# 3. Recalculate! This will instantly dry up any yellow trenches that are no longer connected to the pump.
 		calculate_water_flow()
 		calculate_light_beam()
+		update_trench_visuals()
 
 func update_crops():
 	var directions = [
@@ -326,9 +397,39 @@ func execute_enemy_turn():
 		var next = pest["next_pos"]
 		if current != next:
 			grid_data[current.x][current.y] = TileState.DIRT
-			tilemap.set_cell(current, 2, Vector2i(0, 0))
+			tilemap.set_cell(current, 1, Vector2i(0, 0))
 			grid_data[next.x][next.y] = TileState.PEST
-			tilemap.set_cell(next, 1, Vector2i(0, 0))
+			tilemap.set_cell(next, 0, Vector2i(0, 0))
 			pest["current_pos"] = next
 	calculate_pest_intents()
 	calculate_light_beam()
+
+func _is_trench_connection(x: int, y: int) -> bool:
+	if not _is_within_bounds(x, y): return false
+	var cell = grid_data[x][y]
+	# Connect to dry trenches, wet trenches, and the Pump!
+	return cell == TileState.TRENCH or cell == TileState.WATERED_TRENCH or cell == TileState.PUMP
+
+func get_trench_bitmask(x: int, y: int) -> int:
+	var mask = 0
+	if _is_trench_connection(x, y - 1): mask += 1 # Up
+	if _is_trench_connection(x + 1, y): mask += 2 # Right
+	if _is_trench_connection(x, y + 1): mask += 4 # Down
+	if _is_trench_connection(x - 1, y): mask += 8 # Left
+	return mask
+
+func update_trench_visuals():
+	for x in range(GRID_WIDTH):
+		for y in range(GRID_HEIGHT):
+			var state = grid_data[x][y]
+			
+			if state == TileState.TRENCH or state == TileState.WATERED_TRENCH:
+				var mask = get_trench_bitmask(x, y)
+				var correct_png_id = trench_graphics_map[mask]
+				
+				# If it's a dry trench, draw the normal sprite (Alternative ID 0)
+				if state == TileState.TRENCH:
+					tilemap.set_cell(Vector2i(x, y), correct_png_id, Vector2i(0, 0), 0)
+				# If it's watered, draw the Blue tinted sprite (Alternative ID 1)
+				elif state == TileState.WATERED_TRENCH:
+					tilemap.set_cell(Vector2i(x, y), correct_png_id, Vector2i(0, 0), 1)
