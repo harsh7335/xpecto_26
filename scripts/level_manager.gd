@@ -40,6 +40,25 @@ var trench_graphics_map = {
 	14: 15, # Right + Down + Left (T-Junction)
 	15: 15  # All 4 directions (Crossroads)
 }
+var watered_trench_graphics_map = {
+	0: 1,  # No connections (Standalone dot)
+	1: 4,  # Only Up (End piece)
+	2: 17,  # Only Right (End piece)
+	3: 20,  # Up + Right (Bottom-Left Corner)
+	4: 18,  # Only Down (End piece)
+	5: 0,  # Up + Down (Vertical Straight)
+	6: 22,  # Right + Down (Top-Left Corner)
+	7: 99,  # Up + Right + Down (T-Junction)
+	8: 99,  # Only Left (End piece)
+	9: 99,  # Up + Left (Bottom-Right Corner)
+	10: 99, # Right + Left (Horizontal Straight)
+	11: 99, # Up + Right + Left (T-Junction)
+	12: 99, # Down + Left (Top-Right Corner)
+	13: 99, # Up + Down + Left (T-Junction)
+	14: 99, # Right + Down + Left (T-Junction)
+	15: 99  # All 4 directions (Crossroads)
+}
+
 # Our 2D matrix
 var grid_data = []
 
