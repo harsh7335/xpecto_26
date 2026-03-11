@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c1qfus5wbki2v"
-path="res://.godot/imported/Sky1-sheet.png-3dca5ed160b9921eb0235e315342a453.ctex"
+uid="uid://bm3jbts0yie1m"
+path="res://.godot/imported/waterpump.png-5e2fe170593bfe9a876615c462898a11.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://scenes/animated items/Sky1-sheet.png"
-dest_files=["res://.godot/imported/Sky1-sheet.png-3dca5ed160b9921eb0235e315342a453.ctex"]
+source_file="res://scenes/inanimate items/waterpump.png"
+dest_files=["res://.godot/imported/waterpump.png-5e2fe170593bfe9a876615c462898a11.ctex"]
 
 [params]
 
