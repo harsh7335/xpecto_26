@@ -3,13 +3,17 @@ extends Node2D
 const GRID_WIDTH = 12
 const GRID_HEIGHT = 10
 
+const ID_SCARECROW_HEAD_FORWARD = 40 
+const ID_SCARECROW_HEAD_BACKWARD = 41
+const ID_SCARECROW_SKIRT = 42
+
 const ID_DIRT1 = 2
 const ID_DIRT2 = 3
-const ID_CROP = 7
+const ID_CROP = 39
 const ID_MIRROR_SLASH = 5
 const ID_MIRROR_BACKSLASH = 6
-const ID_PUMP = 8
-const ID_PEST = 9
+const ID_PUMP = 37
+const ID_PEST = 38
 
 enum TileState {
 	DIRT = 0,             # Dirt 1 and Dirt 2 both map to this!
@@ -38,7 +42,7 @@ var trench_graphics_map = {
 	12: 11, # Down + Left (Top-Right Corner) -> Your "T-R_cor"
 	13: 15, # Up + Down + Left (T-Junction)
 	14: 33, # Right + Down + Left (T-Junction)
-	15: 35  # All 4 directions (Crossroads)
+	15: 36  # All 4 directions (Crossroads)
 }
 var watered_trench_graphics_map = {
 	0: 1,  # No connections (Standalone dot)
@@ -48,7 +52,7 @@ var watered_trench_graphics_map = {
 	4: 23,  # Only Down (End piece)
 	5: 0,  # Up + Down (Vertical Straight)
 	6: 22,  # Right + Down (Top-Left Corner)
-	7: 18,  # Up + Right + Down (T-Junction)
+	7: 17,  # Up + Right + Down (T-Junction)
 	8: 24,  # Only Left (End piece)
 	9: 19,  # Up + Left (Bottom-Right Corner)
 	10: 1, # Right + Left (Horizontal Straight)
@@ -64,6 +68,7 @@ var grid_data = []
 
 @onready var tilemap = $TileMapLayer
 @onready var light_layer = $LightLayer
+@onready var objects_layer: TileMapLayer = $TileMapLayer3
 
 var light_start = Vector2i(0, 5)     # Starts at the left edge, middle row
 var light_direction = Vector2i(1, 0) # Moving right (x: 1, y: 0)
@@ -74,7 +79,14 @@ var pump_pos = Vector2i(2, 0)
 
 var active_pests = []
 var active_crops = []
+var crop_anim_frame = 0
 
+var active_scarecrows = []
+# Map the logical state directly to your specific Head IDs!
+var scarecrow_head_map = {
+	TileState.MIRROR_SLASH: ID_SCARECROW_HEAD_FORWARD,
+	TileState.MIRROR_BACKSLASH: ID_SCARECROW_HEAD_BACKWARD
+}
 
 func _ready():
 	print("Building the farm...") # <--- ADD THIS LINE
@@ -83,52 +95,9 @@ func _ready():
 	calculate_light_beam()
 	calculate_pest_intents()
 	update_trench_visuals()
+	update_scarecrow_visuals()
 
-#func _initialize_grid():
-	## Create a 2D array filled with DIRT (0)
-	#for x in range(GRID_WIDTH):
-		#var column = []
-		#for y in range(GRID_HEIGHT):
-			#column.append(TileState.DIRT)
-			## Optional: Fill the visual tilemap with dirt tiles immediately
-			#tilemap.set_cell(Vector2i(x, y), 1, Vector2i(0, 0)) 
-		#grid_data.append(column)
-	#grid_data[pump_pos.x][pump_pos.y] = TileState.PUMP
-	## Optional: Draw a temporary visual for the pump (assuming it's at atlas 2,0)
-	#tilemap.set_cell(pump_pos, 0, Vector2i(2, 0))
-	#
-	#var crop_pos = Vector2i(6, 2)
-	#grid_data[crop_pos.x][crop_pos.y] = TileState.CROP
-	#tilemap.set_cell(crop_pos, 0, Vector2i(2, 0))
-	#active_crops.append(crop_pos)
-	#
-	#var m1 = Vector2i(3, 5)
-	#grid_data[m1.x][m1.y] = TileState.MIRROR_SLASH
-	#tilemap.set_cell(m1, 0, Vector2i(2, 0)) # Drawing your blue square
-#
-	## Mirror 2 (Takes the UP beam and bounces it RIGHT)
-	#var m2 = Vector2i(3, 2)
-	#grid_data[m2.x][m2.y] = TileState.MIRROR_SLASH
-	#tilemap.set_cell(m2, 0, Vector2i(2, 0))
-#
-	## Mirror 3 (Takes the RIGHT beam and bounces it DOWN)
-	#var m3 = Vector2i(8, 2)
-	#grid_data[m3.x][m3.y] = TileState.MIRROR_BACKSLASH
-	#tilemap.set_cell(m3, 0, Vector2i(2, 0))
-#
-	## Mirror 4 (Takes the DOWN beam and bounces it LEFT, hitting the Crop!)
-	#var m4 = Vector2i(8, 5)
-	#grid_data[m4.x][m4.y] = TileState.MIRROR_SLASH
-	#tilemap.set_cell(m4, 0, Vector2i(2, 0))
-	#
-	#var pest_pos = Vector2i(6, 8)
-	#grid_data[pest_pos.x][pest_pos.y] = TileState.PEST
-	#tilemap.set_cell(pest_pos, 0, Vector2i(0, 0))
-	#active_pests.append({
-		#"current_pos": pest_pos,
-		#"next_pos": pest_pos, # Default to staying still
-		#"alive": true
-	#})
+
 func _initialize_grid():
 	# 1. Clear out any old data (great for when you add a "Restart Level" button later!)
 	grid_data.clear()
@@ -148,13 +117,20 @@ func _initialize_grid():
 			# Check the Source ID to figure out what object this is
 			if source_id == ID_CROP:
 				state = TileState.CROP
-				active_crops.append(cell_pos)
+				active_crops.append({
+					"pos": cell_pos,
+					"stage": 0,          # Starts at Stage 0 (Frames 0 to 5)
+					"is_watered": false,
+					"is_lit": false
+				})
 				
 			elif source_id == ID_MIRROR_SLASH:
 				state = TileState.MIRROR_SLASH
+				active_scarecrows.append(cell_pos)
 				
 			elif source_id == ID_MIRROR_BACKSLASH:
 				state = TileState.MIRROR_BACKSLASH
+				active_scarecrows.append(cell_pos)
 				
 			elif source_id == ID_PEST:
 				state = TileState.PEST
@@ -178,7 +154,13 @@ func _initialize_grid():
 				tilemap.set_cell(cell_pos, ID_DIRT1, Vector2i(0, 0))
 				
 		grid_data.append(column)
-	
+	for base_pos in active_scarecrows:
+		var head_pos = base_pos + Vector2i(0, -1)
+		
+		# Make sure it's not off the top of the screen
+		if _is_within_bounds(head_pos.x, head_pos.y):
+			# Change the math from DIRT to OBSTACLE!
+			grid_data[head_pos.x][head_pos.y] = TileState.OBSTACLE
 	
 func _unhandled_input(event):
 	if event.is_action_pressed("ui_accept"): 
@@ -213,10 +195,12 @@ func interact_with_cell(x: int, y: int):
 		grid_data[x][y] = TileState.MIRROR_BACKSLASH
 		print("Rotated mirror to \\")
 		calculate_light_beam() # Recalculate the laser!
+		update_scarecrow_visuals()
 	elif grid_data[x][y] == TileState.MIRROR_BACKSLASH:
 		grid_data[x][y] = TileState.MIRROR_SLASH
 		print("Rotated mirror to /")
 		calculate_light_beam()
+		update_scarecrow_visuals()
 	
 	
 func calculate_water_flow():
@@ -279,39 +263,22 @@ func fill_trench(x: int, y: int):
 		update_trench_visuals()
 
 func update_crops():
-	var directions = [
-		Vector2i(1, 0), Vector2i(-1, 0), 
-		Vector2i(0, 1), Vector2i(0, -1)
-	]
+	var directions = [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
 	
-	# Sweep the entire board looking for crops
-	for x in range(GRID_WIDTH):
-		for y in range(GRID_HEIGHT):
-			if grid_data[x][y] == TileState.CROP:
-				var is_watered = false
-				
-				# Check the 4 tiles immediately around the crop
-				for dir in directions:
-					var neighbor_x = x + dir.x
-					var neighbor_y = y + dir.y
-					
-					# Make sure we don't check off the edge of the screen
-					if _is_within_bounds(neighbor_x, neighbor_y):
-						if grid_data[neighbor_x][neighbor_y] == TileState.WATERED_TRENCH:
-							is_watered = true
-							break # We found water! Stop checking the other sides.
-				
-				# Report the status to the Output window
-				if is_watered:
-					print("Crop at ", x, ",", y, " is WATERED ")
-					# Later: tilemap.set_cell(..., Stage 4 Plant Sprite)
-				else:
-					print("Crop at ", x, ",", y, " is DRY ")
-					# Later: tilemap.set_cell(..., Stage 1 Dirt Sprite)
+	for crop in active_crops:
+		crop["is_watered"] = false # Reset first
+		for dir in directions:
+			var neighbor = crop["pos"] + dir
+			if _is_within_bounds(neighbor.x, neighbor.y):
+				if grid_data[neighbor.x][neighbor.y] == TileState.WATERED_TRENCH:
+					crop["is_watered"] = true
+					break
+
 func calculate_light_beam():
 	# 1. THE RESET: Clear all old light from the glass layer
 	light_layer.clear()
-	
+	for crop in active_crops:
+		crop["is_lit"] = false
 	# 2. THE SETUP: Start at the source
 	var current_pos = light_start
 	var current_dir = light_direction
@@ -340,7 +307,9 @@ func calculate_light_beam():
 		
 		# If it hits a Crop
 		elif cell_under_light == TileState.CROP:
-			print("Light is shining on the Crop!")
+			for crop in active_crops:
+				if crop["pos"] == current_pos:
+					crop["is_lit"] = true
 		
 		elif cell_under_light == TileState.PEST:
 			print("ZAPPED A PEST at: ", current_pos, "!")
@@ -385,11 +354,12 @@ func calculate_pest_intents():
 		
 		var target_crop = current 
 		var min_crop_dist = 99999
-		for crop in active_crops:
-			var d = abs(crop.x - current.x) + abs(crop.y - current.y)
+		for crop_data in active_crops:
+			var crop_pos = crop_data["pos"]
+			var d = abs(crop_pos.x - current.x) + abs(crop_pos.y - current.y)
 			if d < min_crop_dist:
 				min_crop_dist = d
-				target_crop = crop
+				target_crop = crop_pos
 		var shortest_dist = min_crop_dist
 		for dir in directions:
 			var neighbor = current + dir
@@ -403,10 +373,19 @@ func calculate_pest_intents():
 		pest["next_pos"] = best_move
 		if best_move != current:
 			highlight_layer.set_cell(best_move, 0, Vector2i(0, 0))
+	
 
 
 func _on_timer_timeout() -> void:
 	highlight_layer.visible = !highlight_layer.visible
+	crop_anim_frame = (crop_anim_frame + 1) % 6
+	for crop in active_crops:
+		# Calculate the exact X coordinate on your partner's long sprite strip
+		# Stage 0 = frames 0-5. Stage 1 = frames 6-11, etc.
+		var exact_x_coordinate = (crop["stage"] * 6) + crop_anim_frame
+		
+		# Draw that specific slice onto the TileMap!
+		tilemap.set_cell(crop["pos"], ID_CROP, Vector2i(exact_x_coordinate, 0))
 
 func execute_enemy_turn():
 	print("--- ENEMY TURN EXECUTING ---")
@@ -417,10 +396,16 @@ func execute_enemy_turn():
 		var next = pest["next_pos"]
 		if current != next:
 			grid_data[current.x][current.y] = TileState.DIRT
-			tilemap.set_cell(current, 1, Vector2i(0, 0))
+			tilemap.set_cell(current, ID_DIRT1, Vector2i(0, 0))
 			grid_data[next.x][next.y] = TileState.PEST
-			tilemap.set_cell(next, 0, Vector2i(0, 0))
+			tilemap.set_cell(next, ID_PEST, Vector2i(0, 0))
 			pest["current_pos"] = next
+	for crop in active_crops:
+		if crop["is_watered"] and crop["is_lit"]:
+			# Max stage is 3 (Stages 0, 1, 2, 3)
+			if crop["stage"] < 3: 
+				crop["stage"] += 1
+				print("Crop at ", crop["pos"], " grew to stage ", crop["stage"])
 	attack_crops() 
 	calculate_pest_intents()
 	calculate_light_beam()
@@ -482,7 +467,21 @@ func attack_crops():
 					tilemap.set_cell(neighbor, ID_DIRT1, Vector2i(0, 0))
 					
 					# 3. Remove the crop from our tracking list so bugs stop chasing it
-					active_crops.erase(neighbor)
+					active_crops = active_crops.filter(func(c): return c["pos"] != neighbor)
 					
 					# We only eat one crop per turn, so break the inner loop
 					break
+func update_scarecrow_visuals():
+	for base_pos in active_scarecrows:
+		var state = grid_data[base_pos.x][base_pos.y]
+		var head_pos = base_pos + Vector2i(0, -1) # One tile UP!
+		tilemap.set_cell(base_pos, ID_DIRT1, Vector2i(0, 0))
+		tilemap.set_cell(head_pos, ID_DIRT1, Vector2i(0, 0))
+		if scarecrow_head_map.has(state):
+			var correct_head_id = scarecrow_head_map[state]
+			
+			# 1. Paint the correct Head one spot up
+			objects_layer.set_cell(head_pos, correct_head_id, Vector2i(0, 0))
+			
+			# 2. Paint the Animated Skirt on the base spot
+			objects_layer.set_cell(base_pos, ID_SCARECROW_SKIRT, Vector2i(0, 0))
