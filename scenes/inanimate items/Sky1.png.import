@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dhpwl0tqyuq1s"
-path="res://.godot/imported/Sun.png-2ec77df9785b1e957128815ff24d88bd.ctex"
+uid="uid://cspvly4cneecn"
+path="res://.godot/imported/Sky1.png-9d9704297feb87574b7926218af14647.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://scenes/animated items/Sun.png"
-dest_files=["res://.godot/imported/Sun.png-2ec77df9785b1e957128815ff24d88bd.ctex"]
+source_file="res://scenes/inanimate items/Sky1.png"
+dest_files=["res://.godot/imported/Sky1.png-9d9704297feb87574b7926218af14647.ctex"]
 
 [params]
 
