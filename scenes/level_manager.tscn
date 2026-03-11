@@ -38,6 +38,8 @@
 [ext_resource type="Texture2D" uid="uid://cemeu5w8ewsjx" path="res://assets/Soil_DB_horizontal.png" id="28_sk1uf"]
 [ext_resource type="Texture2D" uid="uid://hjdqpcdx5n14" path="res://scenes/inanimate items/Soil_DB_sideB.png" id="29_med4u"]
 [ext_resource type="Texture2D" uid="uid://bcv4rqv362l7i" path="res://scenes/inanimate items/Soil_DB_sideT.png" id="30_nkghq"]
+[ext_resource type="Texture2D" uid="uid://t8mus37f62sa" path="res://scenes/inanimate items/P_Blank_DB.png" id="31_1eak3"]
+[ext_resource type="Texture2D" uid="uid://ckfg7wtiyybxn" path="res://scenes/inanimate items/Blank_DB.png" id="32_j8f7r"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ullk0"]
 shader = ExtResource("2_hexca")
@@ -187,6 +189,16 @@ texture = ExtResource("30_nkghq")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_sk1uf"]
+texture = ExtResource("31_1eak3")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_med4u"]
+texture = ExtResource("32_j8f7r")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mi6q2"]
 texture = ExtResource("23_med4u")
 texture_region_size = Vector2i(32, 32)
@@ -253,6 +265,8 @@ sources/30 = SubResource("TileSetAtlasSource_f4kfx")
 sources/31 = SubResource("TileSetAtlasSource_d655b")
 sources/32 = SubResource("TileSetAtlasSource_tct0j")
 sources/33 = SubResource("TileSetAtlasSource_s80m6")
+sources/34 = SubResource("TileSetAtlasSource_sk1uf")
+sources/35 = SubResource("TileSetAtlasSource_med4u")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_6dptc"]
 texture = ExtResource("4_2yrkd")

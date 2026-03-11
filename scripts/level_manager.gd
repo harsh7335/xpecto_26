@@ -38,7 +38,7 @@ var trench_graphics_map = {
 	12: 11, # Down + Left (Top-Right Corner) -> Your "T-R_cor"
 	13: 15, # Up + Down + Left (T-Junction)
 	14: 33, # Right + Down + Left (T-Junction)
-	15: 9  # All 4 directions (Crossroads)
+	15: 35  # All 4 directions (Crossroads)
 }
 var watered_trench_graphics_map = {
 	0: 1,  # No connections (Standalone dot)
@@ -56,7 +56,7 @@ var watered_trench_graphics_map = {
 	12: 21, # Down + Left (Top-Right Corner)
 	13: 16, # Up + Down + Left (T-Junction)
 	14: 18, # Right + Down + Left (T-Junction)
-	15: 1  # All 4 directions (Crossroads)
+	15: 34  # All 4 directions (Crossroads)
 }
 
 # Our 2D matrix
@@ -270,7 +270,7 @@ func fill_trench(x: int, y: int):
 		# 2. Update the visual back to the Red Square (Atlas 0,0). 
 		# Note: Make sure the Source ID here (the middle number) matches the '1' you used to fix the invisible tiles!
 		tilemap.set_cell(Vector2i(x, y), ID_DIRT1, Vector2i(0, 0))
-		
+			
 		print("Filled trench at: ", x, ", ", y)
 		
 		# 3. Recalculate! This will instantly dry up any yellow trenches that are no longer connected to the pump.
@@ -421,6 +421,7 @@ func execute_enemy_turn():
 			grid_data[next.x][next.y] = TileState.PEST
 			tilemap.set_cell(next, 0, Vector2i(0, 0))
 			pest["current_pos"] = next
+	attack_crops() 
 	calculate_pest_intents()
 	calculate_light_beam()
 
@@ -455,3 +456,33 @@ func update_trench_visuals():
 				elif state == TileState.WATERED_TRENCH:
 					var correct_png_id = watered_trench_graphics_map[mask]
 					tilemap.set_cell(Vector2i(x, y), correct_png_id, Vector2i(0, 0))
+
+func attack_crops():
+	var directions = [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
+	
+	for pest in active_pests:
+		if not pest["alive"]:
+			continue
+			
+		var p_pos = pest["current_pos"]
+		
+		# Check all 4 sides of the bug
+		for dir in directions:
+			var neighbor = p_pos + dir
+			if _is_within_bounds(neighbor.x, neighbor.y):
+				
+				# Did we find a crop?
+				if grid_data[neighbor.x][neighbor.y] == TileState.CROP:
+					print("CHOMP! Pest at ", p_pos, " ate the crop at ", neighbor, "!")
+					
+					# 1. Turn the crop back into dirt logically
+					grid_data[neighbor.x][neighbor.y] = TileState.DIRT
+					
+					# 2. Paint over the crop visual with normal dirt (ID_DIRT1)
+					tilemap.set_cell(neighbor, ID_DIRT1, Vector2i(0, 0))
+					
+					# 3. Remove the crop from our tracking list so bugs stop chasing it
+					active_crops.erase(neighbor)
+					
+					# We only eat one crop per turn, so break the inner loop
+					break
