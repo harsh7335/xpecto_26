@@ -23,40 +23,40 @@ enum TileState {
 	PEST = 8
 }
 var trench_graphics_map = {
-	0: 14,  # No connections (Standalone dot)
-	1: 14,  # Only Up (End piece)
-	2: 14,  # Only Right (End piece)
-	3: 10,  # Up + Right (Bottom-Left Corner) -> Your "B-L_cor"
-	4: 14,  # Only Down (End piece)
+	0: 9,  # No connections (Standalone dot)
+	1: 30,  # Only Up (End piece)
+	2: 29,  # Only Right (End piece)
+	3: 12,  # Up + Right (Bottom-Left Corner) -> Your "B-L_cor"
+	4: 27,  # Only Down (End piece)
 	5: 9,  # Up + Down (Vertical Straight)
-	6: 11,  # Right + Down (Top-Left Corner) -> Your "T-L_cor"
-	7: 15,  # Up + Right + Down (T-Junction)
-	8: 14,  # Only Left (End piece)
-	9: 12,  # Up + Left (Bottom-Right Corner) -> Your "B-R_cor"
-	10: 9, # Right + Left (Horizontal Straight)
-	11: 15, # Up + Right + Left (T-Junction)
-	12: 13, # Down + Left (Top-Right Corner) -> Your "T-R_cor"
+	6: 13,  # Right + Down (Top-Left Corner) -> Your "T-L_cor"
+	7: 14,  # Up + Right + Down (T-Junction)
+	8: 28,  # Only Left (End piece)
+	9: 10,  # Up + Left (Bottom-Right Corner) -> Your "B-R_cor"
+	10: 31, # Right + Left (Horizontal Straight)
+	11: 32, # Up + Right + Left (T-Junction)
+	12: 11, # Down + Left (Top-Right Corner) -> Your "T-R_cor"
 	13: 15, # Up + Down + Left (T-Junction)
-	14: 15, # Right + Down + Left (T-Junction)
-	15: 15  # All 4 directions (Crossroads)
+	14: 33, # Right + Down + Left (T-Junction)
+	15: 9  # All 4 directions (Crossroads)
 }
 var watered_trench_graphics_map = {
 	0: 1,  # No connections (Standalone dot)
-	1: 4,  # Only Up (End piece)
-	2: 17,  # Only Right (End piece)
+	1: 26,  # Only Up (End piece)
+	2: 25,  # Only Right (End piece)
 	3: 20,  # Up + Right (Bottom-Left Corner)
-	4: 18,  # Only Down (End piece)
+	4: 23,  # Only Down (End piece)
 	5: 0,  # Up + Down (Vertical Straight)
 	6: 22,  # Right + Down (Top-Left Corner)
-	7: 99,  # Up + Right + Down (T-Junction)
-	8: 99,  # Only Left (End piece)
-	9: 99,  # Up + Left (Bottom-Right Corner)
-	10: 99, # Right + Left (Horizontal Straight)
-	11: 99, # Up + Right + Left (T-Junction)
-	12: 99, # Down + Left (Top-Right Corner)
-	13: 99, # Up + Down + Left (T-Junction)
-	14: 99, # Right + Down + Left (T-Junction)
-	15: 99  # All 4 directions (Crossroads)
+	7: 18,  # Up + Right + Down (T-Junction)
+	8: 24,  # Only Left (End piece)
+	9: 19,  # Up + Left (Bottom-Right Corner)
+	10: 1, # Right + Left (Horizontal Straight)
+	11: 4, # Up + Right + Left (T-Junction)
+	12: 21, # Down + Left (Top-Right Corner)
+	13: 16, # Up + Down + Left (T-Junction)
+	14: 18, # Right + Down + Left (T-Junction)
+	15: 1  # All 4 directions (Crossroads)
 }
 
 # Our 2D matrix
@@ -269,6 +269,7 @@ func fill_trench(x: int, y: int):
 		
 		# 2. Update the visual back to the Red Square (Atlas 0,0). 
 		# Note: Make sure the Source ID here (the middle number) matches the '1' you used to fix the invisible tiles!
+		tilemap.set_cell(Vector2i(x, y), ID_DIRT1, Vector2i(0, 0))
 		
 		print("Filled trench at: ", x, ", ", y)
 		
@@ -444,11 +445,13 @@ func update_trench_visuals():
 			
 			if state == TileState.TRENCH or state == TileState.WATERED_TRENCH:
 				var mask = get_trench_bitmask(x, y)
-				var correct_png_id = trench_graphics_map[mask]
 				
-				# If it's a dry trench, draw the normal sprite (Alternative ID 0)
+				# If Dry, use the Dry Dictionary IDs
 				if state == TileState.TRENCH:
-					tilemap.set_cell(Vector2i(x, y), correct_png_id, Vector2i(0, 0), 0)
-				# If it's watered, draw the Blue tinted sprite (Alternative ID 1)
+					var correct_png_id = trench_graphics_map[mask]
+					tilemap.set_cell(Vector2i(x, y), correct_png_id, Vector2i(0, 0))
+					
+				# If Wet, use the Pink Water Dictionary IDs
 				elif state == TileState.WATERED_TRENCH:
-					tilemap.set_cell(Vector2i(x, y), correct_png_id, Vector2i(0, 0), 1)
+					var correct_png_id = watered_trench_graphics_map[mask]
+					tilemap.set_cell(Vector2i(x, y), correct_png_id, Vector2i(0, 0))

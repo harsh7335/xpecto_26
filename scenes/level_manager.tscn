@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://c10q0ad46rhtq" path="res://scripts/level_manager.gd" id="1_06fa7"]
 [ext_resource type="Texture2D" uid="uid://ieuifywy30pk" path="res://scenes/inanimate items/Soil_LB1.png" id="2_cow7c"]
 [ext_resource type="Texture2D" uid="uid://chplfb5ouomri" path="res://scenes/inanimate items/Soil_DB_side_B-L_cor.png" id="2_h03sj"]
+[ext_resource type="Shader" uid="uid://bnptqvetcq3s2" path="res://shaders/level_manager.gdshader" id="2_hexca"]
 [ext_resource type="Texture2D" uid="uid://cvykgexgbbato" path="res://assets/4_128x32.png" id="2_kfnik"]
 [ext_resource type="Texture2D" uid="uid://dyp41psf1b7n0" path="res://scenes/inanimate items/P_Soil_DB_side2.png" id="2_rdov2"]
 [ext_resource type="Texture2D" uid="uid://c0aq16pf0uwek" path="res://scenes/inanimate items/Soil_DB_side_T-L_cor.png" id="3_2t3te"]
@@ -29,7 +30,22 @@
 [ext_resource type="Texture2D" uid="uid://cado8pfgf2g4y" path="res://scenes/inanimate items/P_Soil_DB_UL.png" id="19_1eak3"]
 [ext_resource type="Texture2D" uid="uid://dglgbn4x84dlx" path="res://scenes/inanimate items/P_Soil_DB_UR.png" id="20_j8f7r"]
 [ext_resource type="Texture2D" uid="uid://dv4qm44ksxmwd" path="res://scenes/inanimate items/P_Soil_DB_UT.png" id="21_sk1uf"]
+[ext_resource type="Texture2D" uid="uid://bo07uc25c24ve" path="res://scenes/inanimate items/Soil_DB_UB.png" id="23_7qu10"]
 [ext_resource type="Texture2D" uid="uid://dp2sgcugme1u7" path="res://scenes/inanimate items/P_Soil_DB_sideB.png" id="23_med4u"]
+[ext_resource type="Texture2D" uid="uid://cn1d8ujva3c7f" path="res://scenes/inanimate items/Soil_DB_UL.png" id="24_n845c"]
+[ext_resource type="Texture2D" uid="uid://ydqemq5yxrma" path="res://scenes/inanimate items/Soil_DB_UR.png" id="25_1eak3"]
+[ext_resource type="Texture2D" uid="uid://1jhplvs8gu1a" path="res://scenes/inanimate items/Soil_DB_UT.png" id="27_j8f7r"]
+[ext_resource type="Texture2D" uid="uid://cemeu5w8ewsjx" path="res://assets/Soil_DB_horizontal.png" id="28_sk1uf"]
+[ext_resource type="Texture2D" uid="uid://hjdqpcdx5n14" path="res://scenes/inanimate items/Soil_DB_sideB.png" id="29_med4u"]
+[ext_resource type="Texture2D" uid="uid://bcv4rqv362l7i" path="res://scenes/inanimate items/Soil_DB_sideT.png" id="30_nkghq"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ullk0"]
+shader = ExtResource("2_hexca")
+shader_parameter/mask_color = Color(1, 0, 1, 1)
+shader_parameter/water_dark = Color(0, 0.4, 0.8, 1)
+shader_parameter/water_light = Color(0, 0.8, 1, 1)
+shader_parameter/speed = 3.0
+shader_parameter/wave_density = 50.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nkghq"]
 texture = ExtResource("2_rdov2")
@@ -131,8 +147,43 @@ texture = ExtResource("21_sk1uf")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jv1h4"]
+texture = ExtResource("23_7qu10")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nxeb8"]
+texture = ExtResource("24_n845c")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0uq3k"]
+texture = ExtResource("25_1eak3")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vhn1i"]
 texture = ExtResource("3_704g2")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_f4kfx"]
+texture = ExtResource("27_j8f7r")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_d655b"]
+texture = ExtResource("28_sk1uf")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tct0j"]
+texture = ExtResource("29_med4u")
+texture_region_size = Vector2i(32, 32)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_s80m6"]
+texture = ExtResource("30_nkghq")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
 
@@ -195,6 +246,13 @@ sources/23 = SubResource("TileSetAtlasSource_vpg3v")
 sources/24 = SubResource("TileSetAtlasSource_wrosr")
 sources/25 = SubResource("TileSetAtlasSource_xmrkv")
 sources/26 = SubResource("TileSetAtlasSource_wdf8l")
+sources/27 = SubResource("TileSetAtlasSource_jv1h4")
+sources/28 = SubResource("TileSetAtlasSource_nxeb8")
+sources/29 = SubResource("TileSetAtlasSource_0uq3k")
+sources/30 = SubResource("TileSetAtlasSource_f4kfx")
+sources/31 = SubResource("TileSetAtlasSource_d655b")
+sources/32 = SubResource("TileSetAtlasSource_tct0j")
+sources/33 = SubResource("TileSetAtlasSource_s80m6")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_6dptc"]
 texture = ExtResource("4_2yrkd")
@@ -230,6 +288,7 @@ sources/0 = SubResource("TileSetAtlasSource_kfnik")
 script = ExtResource("1_06fa7")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1475823717]
+material = SubResource("ShaderMaterial_ullk0")
 tile_map_data = PackedByteArray("AAAAAAkAAwAAAAAAAAABAAkAAwAAAAAAAAACAAkAAwAAAAAAAAADAAkAAwAAAAAAAAAEAAkAAwAAAAAAAAAFAAkAAwAAAAAAAAAGAAkAAwAAAAAAAAAHAAkAAwAAAAAAAAAIAAkAAwAAAAAAAAAJAAkAAwAAAAAAAAAKAAkAAwAAAAAAAAAKAAgAAwAAAAAAAAAKAAcAAwAAAAAAAAAKAAYAAwAAAAAAAAAKAAUAAwAAAAAAAAAKAAQAAwAAAAAAAAAKAAMAAwAAAAAAAAAKAAIAAwAAAAAAAAAKAAEAAwAAAAAAAAAKAAAAAwAAAAAAAAAJAAAAAwAAAAAAAAAIAAAAAwAAAAAAAAAHAAAAAwAAAAAAAAAGAAAAAwAAAAAAAAAFAAAAAwAAAAAAAAAEAAAAAwAAAAAAAAADAAAAAwAAAAAAAAACAAAAAwAAAAAAAAABAAAAAwAAAAAAAAAAAAAACAAAAAAAAAAAAAEAAwAAAAAAAAABAAEAAwAAAAAAAAACAAEAAwAAAAAAAAADAAEAAwAAAAAAAAAEAAEAAwAAAAAAAAAFAAEAAwAAAAAAAAAGAAEAAwAAAAAAAAAHAAEAAwAAAAAAAAAIAAEAAwAAAAAAAAAJAAEAAwAAAAAAAAAJAAIAAwAAAAAAAAAIAAIAAwAAAAAAAAAHAAIAAwAAAAAAAAAGAAIAAwAAAAAAAAAFAAIAAwAAAAAAAAAEAAIAAwAAAAAAAAADAAIAAwAAAAAAAAACAAIAAwAAAAAAAAABAAIAAwAAAAAAAAAAAAIAAwAAAAAAAAAAAAMAAwAAAAAAAAABAAMAAwAAAAAAAAACAAMAAwAAAAAAAAACAAQAAwAAAAAAAAADAAQAAwAAAAAAAAAEAAQAAwAAAAAAAAAFAAQAAwAAAAAAAAAGAAQAAwAAAAAAAAAHAAQAAwAAAAAAAAAIAAQAAwAAAAAAAAAJAAQAAwAAAAAAAAAJAAMAAwAAAAAAAAAIAAMAAwAAAAAAAAAHAAMAAwAAAAAAAAAGAAMAAwAAAAAAAAAFAAMAAwAAAAAAAAAEAAMAAwAAAAAAAAADAAMAAwAAAAAAAAAAAAQAAwAAAAAAAAAAAAUAAwAAAAAAAAABAAUAAwAAAAAAAAACAAUAAwAAAAAAAAADAAUAAwAAAAAAAAAEAAUAAwAAAAAAAAAHAAUAAwAAAAAAAAAIAAUAAwAAAAAAAAAJAAUAAwAAAAAAAAAGAAUAAwAAAAAAAAAFAAUAAwAAAAAAAAABAAQAAwAAAAAAAAAAAAYAAwAAAAAAAAABAAYAAwAAAAAAAAACAAYAAwAAAAAAAAADAAYAAwAAAAAAAAAEAAYAAwAAAAAAAAAFAAYAAwAAAAAAAAAGAAYAAwAAAAAAAAAHAAYAAwAAAAAAAAAIAAYAAwAAAAAAAAAJAAYAAwAAAAAAAAAJAAcAAwAAAAAAAAAIAAcAAwAAAAAAAAAHAAcAAwAAAAAAAAAGAAcAAwAAAAAAAAAFAAcAAwAAAAAAAAAEAAcAAwAAAAAAAAAAAAcAAwAAAAAAAAABAAcAAwAAAAAAAAACAAcAAwAAAAAAAAADAAcAAwAAAAAAAAABAAgAAwAAAAAAAAACAAgAAwAAAAAAAAADAAgAAwAAAAAAAAAEAAgAAwAAAAAAAAAFAAgAAwAAAAAAAAAGAAgAAwAAAAAAAAAHAAgAAwAAAAAAAAAIAAgAAwAAAAAAAAAJAAgAAwAAAAAAAAAAAAgAAwAAAAAAAAAAAAoAAgAAAAAAAAABAAoAAgAAAAAAAAACAAoAAgAAAAAAAAADAAoAAgAAAAAAAAAEAAoAAgAAAAAAAAAFAAoAAgAAAAAAAAAGAAoAAgAAAAAAAAAHAAoAAgAAAAAAAAAIAAoAAgAAAAAAAAAJAAoAAgAAAAAAAAAKAAoAAgAAAAAAAAALAAAAAgAAAAAAAAALAAEAAgAAAAAAAAALAAIAAgAAAAAAAAALAAMAAgAAAAAAAAALAAQAAgAAAAAAAAALAAUAAgAAAAAAAAALAAYAAgAAAAAAAAALAAcAAgAAAAAAAAALAAgAAgAAAAAAAAALAAkAAgAAAAAAAAALAAoAAgAAAAAAAAA=")
 tile_set = SubResource("TileSet_5eglo")
 
