@@ -389,6 +389,10 @@ shader_parameter/float_height = 2.0
 shader = ExtResource("45_v3m7x")
 shader_parameter/speed = 3.0
 shader_parameter/ray_size = 0.05
+shader_parameter/mote_color = Color(0.21429577, 0.13646436, 1.0829419e-07, 1)
+shader_parameter/mote_size = 0.07000000262648
+shader_parameter/mote_density = 0.44800001802012
+shader_parameter/mote_intensity = 4.0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_6dptc"]
 texture = ExtResource("4_2yrkd")
@@ -407,15 +411,6 @@ texture_region_size = Vector2i(32, 32)
 tile_size = Vector2i(32, 32)
 sources/1 = SubResource("TileSetAtlasSource_6dptc")
 sources/2 = SubResource("TileSetAtlasSource_2yrkd")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_v3m7x"]
-particle_flag_disable_z = true
-emission_shape = 3
-emission_box_extents = Vector3(600, 400, 1)
-gravity = Vector3(0, -10, 0)
-scale_max = 2.0
-turbulence_enabled = true
-turbulence_noise_strength = 0.5
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kfnik"]
 texture = ExtResource("2_kfnik")
@@ -473,12 +468,6 @@ clip_children = 2
 material = SubResource("ShaderMaterial_nhse7")
 tile_set = SubResource("TileSet_kq0y1")
 
-[node name="SunMotes" type="GPUParticles2D" parent="LightLayer" unique_id=422264580]
-amount = 200
-lifetime = 3.0
-preprocess = 3.0
-process_material = SubResource("ParticleProcessMaterial_v3m7x")
-
 [node name="HighlightLayer" type="TileMapLayer" parent="." unique_id=478829054]
 modulate = Color(1, 1, 1, 0.47058824)
 tile_set = SubResource("TileSet_dpnu2")
@@ -491,6 +480,7 @@ autostart = true
 environment = SubResource("Environment_477g5")
 
 [node name="FallingLeaves" type="GPUParticles2D" parent="." unique_id=1094925583]
+visible = false
 material = SubResource("CanvasItemMaterial_v3m7x")
 amount = 150
 lifetime = 5.0
