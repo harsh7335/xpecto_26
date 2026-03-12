@@ -161,13 +161,14 @@ func _initialize_grid():
 		var column = []
 		for y in range(GRID_HEIGHT):
 			var cell_pos = Vector2i(x, y)
+			var object_id = objects_layer.get_cell_source_id(cell_pos)
 			var source_id = tilemap.get_cell_source_id(cell_pos)
 			
 			# Default logical state is Dirt
 			var state = TileState.DIRT
 			
 			# Check the Source ID to figure out what object this is
-			if source_id == ID_CROP:
+			if object_id == ID_CROP:
 				state = TileState.CROP
 				active_crops.append({
 					"pos": cell_pos,
@@ -184,7 +185,7 @@ func _initialize_grid():
 				state = TileState.MIRROR_BACKSLASH
 				active_scarecrows.append(cell_pos)
 				
-			elif source_id == ID_PEST:
+			elif object_id == ID_PEST:
 				state = TileState.PEST
 				active_pests.append({
 					"current_pos": cell_pos,
@@ -192,7 +193,7 @@ func _initialize_grid():
 					"alive": true
 				})
 				
-			elif source_id == ID_PUMP:
+			elif object_id == ID_PUMP:
 				state = TileState.PUMP
 				pump_pos = cell_pos 
 			
@@ -206,13 +207,6 @@ func _initialize_grid():
 				tilemap.set_cell(cell_pos, ID_DIRT1, Vector2i(0, 0))
 				
 		grid_data.append(column)
-	#for base_pos in active_scarecrows:
-		#var head_pos = base_pos + Vector2i(0, -1)
-		#
-		## Make sure it's not off the top of the screen
-		#if _is_within_bounds(head_pos.x, head_pos.y):
-			## Change the math from DIRT to OBSTACLE!
-			#grid_data[head_pos.x][head_pos.y] = TileState.OBSTACLE
 	
 func _unhandled_input(event):
 	if event.is_action_pressed("ui_accept"): 
@@ -438,7 +432,7 @@ func _on_timer_timeout() -> void:
 		var exact_x_coordinate = (crop["stage"] * 6) + crop_anim_frame
 		
 		# Draw that specific slice onto the TileMap!
-		tilemap.set_cell(crop["pos"], ID_CROP, Vector2i(exact_x_coordinate, 0))
+		objects_layer.set_cell(crop["pos"], ID_CROP, Vector2i(exact_x_coordinate, 0))
 
 func execute_enemy_turn():
 	print("--- ENEMY TURN EXECUTING ---")
@@ -449,9 +443,9 @@ func execute_enemy_turn():
 		var next = pest["next_pos"]
 		if current != next:
 			grid_data[current.x][current.y] = TileState.DIRT
-			tilemap.set_cell(current, ID_DIRT1, Vector2i(0, 0))
+			objects_layer.set_cell(current, -1)
 			grid_data[next.x][next.y] = TileState.PEST
-			tilemap.set_cell(next, ID_PEST, Vector2i(0, 0))
+			objects_layer.set_cell(next, ID_PEST, Vector2i(0, 0))
 			pest["current_pos"] = next
 	for crop in active_crops:
 		if crop["is_watered"] and crop["is_lit"]:
@@ -519,7 +513,7 @@ func attack_crops():
 					grid_data[neighbor.x][neighbor.y] = TileState.DIRT
 					
 					# 2. Paint over the crop visual with normal dirt (ID_DIRT1)
-					tilemap.set_cell(neighbor, ID_DIRT1, Vector2i(0, 0))
+					objects_layer.set_cell(neighbor, -1)
 					
 					# 3. Remove the crop from our tracking list so bugs stop chasing it
 					active_crops = active_crops.filter(func(c): return c["pos"] != neighbor)
