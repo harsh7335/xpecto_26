@@ -5,7 +5,7 @@ const GRID_HEIGHT = 10
 
 const ID_SCARECROW_HEAD_FORWARD = 40 
 const ID_SCARECROW_HEAD_BACKWARD = 41
-const ID_SCARECROW_SKIRT = 42
+const ID_SCARECROW_SKIRT = 43
 
 const ID_DIRT1 = 2
 const ID_DIRT2 = 3
@@ -154,13 +154,13 @@ func _initialize_grid():
 				tilemap.set_cell(cell_pos, ID_DIRT1, Vector2i(0, 0))
 				
 		grid_data.append(column)
-	for base_pos in active_scarecrows:
-		var head_pos = base_pos + Vector2i(0, -1)
-		
-		# Make sure it's not off the top of the screen
-		if _is_within_bounds(head_pos.x, head_pos.y):
-			# Change the math from DIRT to OBSTACLE!
-			grid_data[head_pos.x][head_pos.y] = TileState.OBSTACLE
+	#for base_pos in active_scarecrows:
+		#var head_pos = base_pos + Vector2i(0, -1)
+		#
+		## Make sure it's not off the top of the screen
+		#if _is_within_bounds(head_pos.x, head_pos.y):
+			## Change the math from DIRT to OBSTACLE!
+			#grid_data[head_pos.x][head_pos.y] = TileState.OBSTACLE
 	
 func _unhandled_input(event):
 	if event.is_action_pressed("ui_accept"): 
@@ -409,6 +409,7 @@ func execute_enemy_turn():
 	attack_crops() 
 	calculate_pest_intents()
 	calculate_light_beam()
+	check_game_state()
 
 func _is_trench_connection(x: int, y: int) -> bool:
 	if not _is_within_bounds(x, y): return false
@@ -476,7 +477,10 @@ func update_scarecrow_visuals():
 		var state = grid_data[base_pos.x][base_pos.y]
 		var head_pos = base_pos + Vector2i(0, -1) # One tile UP!
 		tilemap.set_cell(base_pos, ID_DIRT1, Vector2i(0, 0))
-		tilemap.set_cell(head_pos, ID_DIRT1, Vector2i(0, 0))
+		if _is_within_bounds(head_pos.x, head_pos.y):
+			var head_state = grid_data[head_pos.x][head_pos.y]
+			if head_state != TileState.TRENCH and head_state != TileState.WATERED_TRENCH:
+				tilemap.set_cell(head_pos, ID_DIRT1, Vector2i(0, 0))
 		if scarecrow_head_map.has(state):
 			var correct_head_id = scarecrow_head_map[state]
 			
@@ -485,3 +489,22 @@ func update_scarecrow_visuals():
 			
 			# 2. Paint the Animated Skirt on the base spot
 			objects_layer.set_cell(base_pos, ID_SCARECROW_SKIRT, Vector2i(0, 0))
+func check_game_state():
+	# 1. THE LOSE CONDITION
+	# If the bugs ate everything and the list is empty...
+	if active_crops.size() == 0:
+		print("GAME OVER! The pests ate all your crops!")
+		# We can add a "Restart Level" popup here later!
+		return
+		
+	# 2. THE WIN CONDITION
+	var all_crops_grown = true
+	
+	for crop in active_crops:
+		if crop["stage"] < 3:
+			all_crops_grown = false
+			break # Found a small crop, no need to keep checking!
+			
+	if all_crops_grown:
+		print("LEVEL COMPLETE! All crops are fully grown!")
+		# We can load the next level here later!
