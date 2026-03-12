@@ -45,6 +45,8 @@
 [ext_resource type="Texture2D" uid="uid://b2jq655aj1566" path="res://scenes/inanimate items/ants.png" id="35_med4u"]
 [ext_resource type="Texture2D" uid="uid://cji4byco6bkhm" path="res://scenes/animated items/Plant.png" id="36_nkghq"]
 [ext_resource type="Texture2D" uid="uid://drauuc6t3awo1" path="res://scenes/animated items/Scarecrow_skirt.png" id="40_477g5"]
+[ext_resource type="Shader" uid="uid://d330m4sp2tuhb" path="res://shaders/level_manager3.gdshader" id="44_nhse7"]
+[ext_resource type="Shader" uid="uid://bhju76f1kguff" path="res://shaders/sunlight.gdshader" id="45_v3m7x"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_j2h54"]
 texture = ExtResource("2_cow7c")
@@ -378,8 +380,15 @@ sources/40 = SubResource("TileSetAtlasSource_dsowa")
 sources/41 = SubResource("TileSetAtlasSource_q1kkk")
 sources/43 = SubResource("TileSetAtlasSource_hroa7")
 
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_nkghq"]
-blend_mode = 1
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_477g5"]
+shader = ExtResource("44_nhse7")
+shader_parameter/speed = 2.0
+shader_parameter/float_height = 2.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nhse7"]
+shader = ExtResource("45_v3m7x")
+shader_parameter/speed = 3.0
+shader_parameter/ray_size = 0.05
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_6dptc"]
 texture = ExtResource("4_2yrkd")
@@ -399,6 +408,15 @@ tile_size = Vector2i(32, 32)
 sources/1 = SubResource("TileSetAtlasSource_6dptc")
 sources/2 = SubResource("TileSetAtlasSource_2yrkd")
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_v3m7x"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(600, 400, 1)
+gravity = Vector3(0, -10, 0)
+scale_max = 2.0
+turbulence_enabled = true
+turbulence_noise_strength = 0.5
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kfnik"]
 texture = ExtResource("2_kfnik")
 texture_region_size = Vector2i(32, 32)
@@ -410,6 +428,28 @@ texture_region_size = Vector2i(32, 32)
 [sub_resource type="TileSet" id="TileSet_dpnu2"]
 tile_size = Vector2i(32, 32)
 sources/0 = SubResource("TileSetAtlasSource_kfnik")
+
+[sub_resource type="Environment" id="Environment_477g5"]
+background_mode = 3
+glow_enabled = true
+glow_intensity = 0.8
+glow_hdr_threshold = 0.6
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_v3m7x"]
+blend_mode = 1
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_u16cs"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(600, 300, 1)
+initial_velocity_min = 20.0
+initial_velocity_max = 80.0
+angular_velocity_min = -45.000015
+angular_velocity_max = 44.999985
+gravity = Vector3(0, 40, 0)
+scale_max = 2.5
+turbulence_enabled = true
+turbulence_noise_strength = 0.5
 
 [node name="LevelManager" type="Node2D" unique_id=93328618]
 script = ExtResource("1_06fa7")
@@ -424,12 +464,20 @@ tile_map_data = PackedByteArray("AAAAAAkAAwAAAAAAAAABAAkAAwAAAAAAAAACAAkAAgAAAAA
 tile_set = SubResource("TileSet_5eglo")
 
 [node name="TileMapLayer3" type="TileMapLayer" parent="." unique_id=499951023]
+material = SubResource("ShaderMaterial_477g5")
 tile_set = SubResource("TileSet_5eglo")
 
 [node name="LightLayer" type="TileMapLayer" parent="." unique_id=1438241068]
 modulate = Color(0.8544692, 0.65394545, 1.1551381e-06, 0.47058824)
-material = SubResource("CanvasItemMaterial_nkghq")
+clip_children = 2
+material = SubResource("ShaderMaterial_nhse7")
 tile_set = SubResource("TileSet_kq0y1")
+
+[node name="SunMotes" type="GPUParticles2D" parent="LightLayer" unique_id=422264580]
+amount = 200
+lifetime = 3.0
+preprocess = 3.0
+process_material = SubResource("ParticleProcessMaterial_v3m7x")
 
 [node name="HighlightLayer" type="TileMapLayer" parent="." unique_id=478829054]
 modulate = Color(1, 1, 1, 0.47058824)
@@ -438,5 +486,31 @@ tile_set = SubResource("TileSet_dpnu2")
 [node name="Timer" type="Timer" parent="HighlightLayer" unique_id=1698491585]
 wait_time = 0.5
 autostart = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=590180403]
+environment = SubResource("Environment_477g5")
+
+[node name="FallingLeaves" type="GPUParticles2D" parent="." unique_id=1094925583]
+material = SubResource("CanvasItemMaterial_v3m7x")
+amount = 150
+lifetime = 5.0
+preprocess = 5.0
+process_material = SubResource("ParticleProcessMaterial_u16cs")
+
+[node name="HoverCursor" type="Sprite2D" parent="." unique_id=1583077356]
+scale = Vector2(1.1, 1.1)
+
+[node name="Frame" type="ReferenceRect" parent="HoverCursor" unique_id=60900474]
+offset_left = -16.0
+offset_top = -16.0
+offset_right = 16.0
+offset_bottom = 16.0
+mouse_filter = 2
+border_color = Color(0, 0, 0, 1)
+border_width = 2.0
+editor_only = false
+
+[node name="Shadow" type="Sprite2D" parent="HoverCursor" unique_id=1088673964]
+modulate = Color(0, 0, 0, 0.25490198)
 
 [connection signal="timeout" from="HighlightLayer/Timer" to="." method="_on_timer_timeout"]

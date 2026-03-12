@@ -65,7 +65,8 @@ var watered_trench_graphics_map = {
 
 # Our 2D matrix
 var grid_data = []
-
+@onready var hover_cursor: Sprite2D = $HoverCursor
+@onready var hover_shadow: Sprite2D = $HoverCursor/Shadow
 @onready var tilemap = $TileMapLayer
 @onready var light_layer = $LightLayer
 @onready var objects_layer: TileMapLayer = $TileMapLayer3
@@ -97,6 +98,57 @@ func _ready():
 	update_trench_visuals()
 	update_scarecrow_visuals()
 
+func _process(delta): 
+	var mouse_pos = get_global_mouse_position()
+	var grid_pos = tilemap.local_to_map(mouse_pos)
+	
+	if _is_within_bounds(grid_pos.x, grid_pos.y):
+		
+		var target_layer = objects_layer
+		var source_id = target_layer.get_cell_source_id(grid_pos)
+		
+		# If the object layer is empty, check the ground layer
+		if source_id == -1:
+			target_layer = tilemap
+			source_id = target_layer.get_cell_source_id(grid_pos)
+			
+		if source_id != -1:
+			var atlas_coords = target_layer.get_cell_atlas_coords(grid_pos)
+			var tile_source = target_layer.tile_set.get_source(source_id) as TileSetAtlasSource
+			
+			if tile_source:
+				hover_cursor.texture = tile_source.texture
+				hover_shadow.texture = tile_source.texture
+				hover_cursor.region_enabled = true
+				hover_shadow.region_enabled = true
+				var region = tile_source.get_tile_texture_region(atlas_coords)
+				hover_cursor.region_rect = region
+				hover_shadow.region_rect = region
+				
+				# --- THE SMOOTHNESS & JUICE ---
+				var ground_pos = target_layer.map_to_local(grid_pos)
+				var lifted_pos = ground_pos + Vector2(0, -6) # Target height
+				
+				# If it just appeared, snap it to the ground so it visibly "pops" up
+				if not hover_cursor.visible:
+					hover_cursor.global_position = ground_pos
+					hover_cursor.scale = Vector2(1.0, 1.0)
+					hover_cursor.visible = true
+					
+				# Smoothly glide the position and scale
+				hover_cursor.global_position = hover_cursor.global_position.lerp(lifted_pos, 20.0 * delta)
+				hover_cursor.scale = hover_cursor.scale.lerp(Vector2(1.15, 1.15), 15.0 * delta)
+				
+				# --- THE VISUAL DISTINCTNESS ---
+				# Overdrive the RGB values past 1.0 to make it glow and look distinct!
+				hover_cursor.modulate = Color(1.3, 1.3, 1.3, 1.0) 
+				
+				# Lock the shadow safely to the ground beneath it
+				hover_shadow.global_position = ground_pos + Vector2(0, 4)
+				hover_shadow.scale = Vector2(1.0, 1.0) / hover_cursor.scale 
+				
+	else:
+		hover_cursor.visible = false
 
 func _initialize_grid():
 	# 1. Clear out any old data (great for when you add a "Restart Level" button later!)
@@ -279,7 +331,8 @@ func calculate_light_beam():
 	light_layer.clear()
 	for crop in active_crops:
 		crop["is_lit"] = false
-	# 2. THE SETUP: Start at the source
+	light_layer.modulate = Color(1.2, 1.1, 0.2, 0.6)
+	
 	var current_pos = light_start
 	var current_dir = light_direction
 	
@@ -440,6 +493,7 @@ func update_trench_visuals():
 					
 				# If Wet, use the Pink Water Dictionary IDs
 				elif state == TileState.WATERED_TRENCH:
+					tilemap.modulate = Color(0.1, 2.0, 2.0, 1.0) # Bright neon cyan
 					var correct_png_id = watered_trench_graphics_map[mask]
 					tilemap.set_cell(Vector2i(x, y), correct_png_id, Vector2i(0, 0))
 
