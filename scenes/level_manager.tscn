@@ -1,52 +1,54 @@
 [gd_scene format=4 uid="uid://c7yb7qu2ey772"]
 
 [ext_resource type="Script" uid="uid://c10q0ad46rhtq" path="res://scripts/level_manager.gd" id="1_06fa7"]
-[ext_resource type="Texture2D" uid="uid://ieuifywy30pk" path="res://scenes/inanimate items/Soil_LB1.png" id="2_cow7c"]
-[ext_resource type="Texture2D" uid="uid://chplfb5ouomri" path="res://scenes/inanimate items/Soil_DB_side_B-L_cor.png" id="2_h03sj"]
+[ext_resource type="Texture2D" uid="uid://ieuifywy30pk" path="res://assets/inanimate items/Soil_LB1.png" id="2_cow7c"]
+[ext_resource type="Texture2D" uid="uid://chplfb5ouomri" path="res://assets/inanimate items/Soil_DB_side_B-L_cor.png" id="2_h03sj"]
 [ext_resource type="Shader" uid="uid://bnptqvetcq3s2" path="res://shaders/level_manager.gdshader" id="2_hexca"]
 [ext_resource type="Texture2D" uid="uid://cvykgexgbbato" path="res://assets/4_128x32.png" id="2_kfnik"]
-[ext_resource type="Texture2D" uid="uid://dyp41psf1b7n0" path="res://scenes/inanimate items/P_Soil_DB_side2.png" id="2_rdov2"]
-[ext_resource type="Texture2D" uid="uid://c0aq16pf0uwek" path="res://scenes/inanimate items/Soil_DB_side_T-L_cor.png" id="3_2t3te"]
-[ext_resource type="Texture2D" uid="uid://c72m473n04415" path="res://scenes/inanimate items/Soil_LB2.png" id="3_704g2"]
-[ext_resource type="Texture2D" uid="uid://c3grs413o8214" path="res://scenes/inanimate items/P_Soil_DB_side3.png" id="3_hexca"]
+[ext_resource type="Texture2D" uid="uid://dyp41psf1b7n0" path="res://assets/inanimate items/P_Soil_DB_side2.png" id="2_rdov2"]
+[ext_resource type="Texture2D" uid="uid://c0aq16pf0uwek" path="res://assets/inanimate items/Soil_DB_side_T-L_cor.png" id="3_2t3te"]
+[ext_resource type="Texture2D" uid="uid://c72m473n04415" path="res://assets/inanimate items/Soil_LB2.png" id="3_704g2"]
+[ext_resource type="Texture2D" uid="uid://c3grs413o8214" path="res://assets/inanimate items/P_Soil_DB_side3.png" id="3_hexca"]
 [ext_resource type="Texture2D" uid="uid://cmu3yk70da4gl" path="res://assets/WHITE64X64.png" id="4_2yrkd"]
 [ext_resource type="Texture2D" uid="uid://ch5xwf11j6jgh" path="res://assets/Scarecrow_top_left.png" id="4_l4ie8"]
-[ext_resource type="Texture2D" uid="uid://bnvhic828j0wc" path="res://scenes/inanimate items/Soil_DB_side_B-R_cor.png" id="4_vhn1i"]
-[ext_resource type="Texture2D" uid="uid://rlquhtcf6vo7" path="res://scenes/inanimate items/Soil_DB_side_T-R_cor.png" id="5_jt70k"]
+[ext_resource type="Texture2D" uid="uid://bnvhic828j0wc" path="res://assets/inanimate items/Soil_DB_side_B-R_cor.png" id="4_vhn1i"]
+[ext_resource type="Texture2D" uid="uid://rlquhtcf6vo7" path="res://assets/inanimate items/Soil_DB_side_T-R_cor.png" id="5_jt70k"]
 [ext_resource type="Texture2D" uid="uid://bnbme6kfh5pvi" path="res://assets/Scarecrow_top_mirror_right.png" id="5_s3v2u"]
 [ext_resource type="Texture2D" uid="uid://f3nxid72lbun" path="res://assets/WHITE32x32png.png" id="6_8txj0"]
-[ext_resource type="Texture2D" uid="uid://8rj6teldeli1" path="res://scenes/inanimate items/Soil_DB_sideL.png" id="6_vhn1i"]
-[ext_resource type="Texture2D" uid="uid://po4tjynnvjrm" path="res://scenes/inanimate items/Untiled_soil.png" id="7_h03sj"]
-[ext_resource type="Texture2D" uid="uid://cwsk4578vbcea" path="res://scenes/inanimate items/Soil_DB_sideR.png" id="7_jt70k"]
-[ext_resource type="Texture2D" uid="uid://b6q3gfrj3gj1x" path="res://scenes/inanimate items/P_Soil_DB_sideL2.png" id="10_ullk0"]
-[ext_resource type="Texture2D" uid="uid://bfrdcle76ilh5" path="res://scenes/inanimate items/P_Soil_DB_sideL.png" id="11_cmf65"]
-[ext_resource type="Texture2D" uid="uid://cjuh4er6v0y4x" path="res://scenes/inanimate items/P_Soil_DB_sideT.png" id="12_3xq6s"]
-[ext_resource type="Texture2D" uid="uid://ds5utxtpjg652" path="res://scenes/inanimate items/Soil_DB_side1.png" id="12_l1ep3"]
-[ext_resource type="Texture2D" uid="uid://dub46jg7c7gxo" path="res://scenes/inanimate items/P_Soil_DB_side_B-L_cor.png" id="13_a67kl"]
-[ext_resource type="Texture2D" uid="uid://cgmr3tbxqp846" path="res://scenes/inanimate items/P_Soil_DB_side_B-R_cor.png" id="15_wt8g0"]
-[ext_resource type="Texture2D" uid="uid://ccktsff22qjgw" path="res://scenes/inanimate items/P_Soil_DB_side_T-L_cor.png" id="16_41jhg"]
-[ext_resource type="Texture2D" uid="uid://ogl5uc8q6mm6" path="res://scenes/inanimate items/P_Soil_DB_side_T-R_cor.png" id="17_7qu10"]
-[ext_resource type="Texture2D" uid="uid://c5rhm4rv5rc24" path="res://scenes/inanimate items/P_Soil_DB_UB.png" id="18_n845c"]
-[ext_resource type="Texture2D" uid="uid://cado8pfgf2g4y" path="res://scenes/inanimate items/P_Soil_DB_UL.png" id="19_1eak3"]
-[ext_resource type="Texture2D" uid="uid://dglgbn4x84dlx" path="res://scenes/inanimate items/P_Soil_DB_UR.png" id="20_j8f7r"]
-[ext_resource type="Texture2D" uid="uid://dv4qm44ksxmwd" path="res://scenes/inanimate items/P_Soil_DB_UT.png" id="21_sk1uf"]
-[ext_resource type="Texture2D" uid="uid://bo07uc25c24ve" path="res://scenes/inanimate items/Soil_DB_UB.png" id="23_7qu10"]
-[ext_resource type="Texture2D" uid="uid://dp2sgcugme1u7" path="res://scenes/inanimate items/P_Soil_DB_sideB.png" id="23_med4u"]
-[ext_resource type="Texture2D" uid="uid://cn1d8ujva3c7f" path="res://scenes/inanimate items/Soil_DB_UL.png" id="24_n845c"]
-[ext_resource type="Texture2D" uid="uid://ydqemq5yxrma" path="res://scenes/inanimate items/Soil_DB_UR.png" id="25_1eak3"]
-[ext_resource type="Texture2D" uid="uid://1jhplvs8gu1a" path="res://scenes/inanimate items/Soil_DB_UT.png" id="27_j8f7r"]
+[ext_resource type="Texture2D" uid="uid://8rj6teldeli1" path="res://assets/inanimate items/Soil_DB_sideL.png" id="6_vhn1i"]
+[ext_resource type="Texture2D" uid="uid://po4tjynnvjrm" path="res://assets/inanimate items/Untiled_soil.png" id="7_h03sj"]
+[ext_resource type="Texture2D" uid="uid://cwsk4578vbcea" path="res://assets/inanimate items/Soil_DB_sideR.png" id="7_jt70k"]
+[ext_resource type="Texture2D" uid="uid://b6q3gfrj3gj1x" path="res://assets/inanimate items/P_Soil_DB_sideL2.png" id="10_ullk0"]
+[ext_resource type="Texture2D" uid="uid://bfrdcle76ilh5" path="res://assets/inanimate items/P_Soil_DB_sideL.png" id="11_cmf65"]
+[ext_resource type="Texture2D" uid="uid://cjuh4er6v0y4x" path="res://assets/inanimate items/P_Soil_DB_sideT.png" id="12_3xq6s"]
+[ext_resource type="Texture2D" uid="uid://ds5utxtpjg652" path="res://assets/inanimate items/Soil_DB_side1.png" id="12_l1ep3"]
+[ext_resource type="Texture2D" uid="uid://dub46jg7c7gxo" path="res://assets/inanimate items/P_Soil_DB_side_B-L_cor.png" id="13_a67kl"]
+[ext_resource type="Texture2D" uid="uid://cgmr3tbxqp846" path="res://assets/inanimate items/P_Soil_DB_side_B-R_cor.png" id="15_wt8g0"]
+[ext_resource type="Texture2D" uid="uid://ccktsff22qjgw" path="res://assets/inanimate items/P_Soil_DB_side_T-L_cor.png" id="16_41jhg"]
+[ext_resource type="Texture2D" uid="uid://ogl5uc8q6mm6" path="res://assets/inanimate items/P_Soil_DB_side_T-R_cor.png" id="17_7qu10"]
+[ext_resource type="Texture2D" uid="uid://c5rhm4rv5rc24" path="res://assets/inanimate items/P_Soil_DB_UB.png" id="18_n845c"]
+[ext_resource type="Texture2D" uid="uid://cado8pfgf2g4y" path="res://assets/inanimate items/P_Soil_DB_UL.png" id="19_1eak3"]
+[ext_resource type="Texture2D" uid="uid://dglgbn4x84dlx" path="res://assets/inanimate items/P_Soil_DB_UR.png" id="20_j8f7r"]
+[ext_resource type="Texture2D" uid="uid://dv4qm44ksxmwd" path="res://assets/inanimate items/P_Soil_DB_UT.png" id="21_sk1uf"]
+[ext_resource type="Texture2D" uid="uid://bo07uc25c24ve" path="res://assets/inanimate items/Soil_DB_UB.png" id="23_7qu10"]
+[ext_resource type="Texture2D" uid="uid://dp2sgcugme1u7" path="res://assets/inanimate items/P_Soil_DB_sideB.png" id="23_med4u"]
+[ext_resource type="Texture2D" uid="uid://cn1d8ujva3c7f" path="res://assets/inanimate items/Soil_DB_UL.png" id="24_n845c"]
+[ext_resource type="Texture2D" uid="uid://ydqemq5yxrma" path="res://assets/inanimate items/Soil_DB_UR.png" id="25_1eak3"]
+[ext_resource type="Texture2D" uid="uid://1jhplvs8gu1a" path="res://assets/inanimate items/Soil_DB_UT.png" id="27_j8f7r"]
 [ext_resource type="Texture2D" uid="uid://cemeu5w8ewsjx" path="res://assets/Soil_DB_horizontal.png" id="28_sk1uf"]
-[ext_resource type="Texture2D" uid="uid://hjdqpcdx5n14" path="res://scenes/inanimate items/Soil_DB_sideB.png" id="29_med4u"]
-[ext_resource type="Texture2D" uid="uid://bcv4rqv362l7i" path="res://scenes/inanimate items/Soil_DB_sideT.png" id="30_nkghq"]
-[ext_resource type="Texture2D" uid="uid://t8mus37f62sa" path="res://scenes/inanimate items/P_Blank_DB.png" id="31_1eak3"]
-[ext_resource type="Texture2D" uid="uid://ckfg7wtiyybxn" path="res://scenes/inanimate items/Blank_DB.png" id="32_j8f7r"]
-[ext_resource type="Texture2D" uid="uid://dtfp4fs5egvro" path="res://scenes/Blank_DB.png" id="33_j8f7r"]
-[ext_resource type="Texture2D" uid="uid://dauqmhatbuqa5" path="res://scenes/inanimate items/watertank.png" id="34_sk1uf"]
-[ext_resource type="Texture2D" uid="uid://b2jq655aj1566" path="res://scenes/inanimate items/ants.png" id="35_med4u"]
-[ext_resource type="Texture2D" uid="uid://cji4byco6bkhm" path="res://scenes/animated items/Plant.png" id="36_nkghq"]
-[ext_resource type="Texture2D" uid="uid://drauuc6t3awo1" path="res://scenes/animated items/Scarecrow_skirt.png" id="40_477g5"]
+[ext_resource type="Texture2D" uid="uid://hjdqpcdx5n14" path="res://assets/inanimate items/Soil_DB_sideB.png" id="29_med4u"]
+[ext_resource type="Texture2D" uid="uid://bcv4rqv362l7i" path="res://assets/inanimate items/Soil_DB_sideT.png" id="30_nkghq"]
+[ext_resource type="Texture2D" uid="uid://t8mus37f62sa" path="res://assets/inanimate items/P_Blank_DB.png" id="31_1eak3"]
+[ext_resource type="Texture2D" uid="uid://ckfg7wtiyybxn" path="res://assets/inanimate items/Blank_DB.png" id="32_j8f7r"]
+[ext_resource type="Texture2D" uid="uid://dtfp4fs5egvro" path="res://assets/Blank_DB.png" id="33_j8f7r"]
+[ext_resource type="Texture2D" uid="uid://dauqmhatbuqa5" path="res://assets/inanimate items/watertank.png" id="34_sk1uf"]
+[ext_resource type="Texture2D" uid="uid://b2jq655aj1566" path="res://assets/inanimate items/ants.png" id="35_med4u"]
+[ext_resource type="Texture2D" uid="uid://cji4byco6bkhm" path="res://assets/animated items/Plant.png" id="36_nkghq"]
+[ext_resource type="Texture2D" uid="uid://drauuc6t3awo1" path="res://assets/animated items/Scarecrow_skirt.png" id="40_477g5"]
 [ext_resource type="Shader" uid="uid://d330m4sp2tuhb" path="res://shaders/level_manager3.gdshader" id="44_nhse7"]
 [ext_resource type="Shader" uid="uid://bhju76f1kguff" path="res://shaders/sunlight.gdshader" id="45_v3m7x"]
+[ext_resource type="Texture2D" uid="uid://c0ksorwka20cb" path="res://assets/animated items/Leaf_dry.png" id="48_u16cs"]
+[ext_resource type="Texture2D" uid="uid://bfmjog7ysqiuw" path="res://assets/animated items/Leaf_green.png" id="49_iswue"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_j2h54"]
 texture = ExtResource("2_cow7c")
@@ -432,6 +434,10 @@ glow_hdr_threshold = 0.6
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_v3m7x"]
 blend_mode = 1
+particles_animation = true
+particles_anim_h_frames = 31
+particles_anim_v_frames = 1
+particles_anim_loop = false
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_u16cs"]
 particle_flag_disable_z = true
@@ -442,7 +448,8 @@ initial_velocity_max = 80.0
 angular_velocity_min = -45.000015
 angular_velocity_max = 44.999985
 gravity = Vector3(0, 40, 0)
-scale_max = 2.5
+scale_min = 0.5
+scale_max = 1.5
 turbulence_enabled = true
 turbulence_noise_strength = 0.5
 
@@ -480,9 +487,17 @@ autostart = true
 environment = SubResource("Environment_477g5")
 
 [node name="FallingLeaves" type="GPUParticles2D" parent="." unique_id=1094925583]
-visible = false
 material = SubResource("CanvasItemMaterial_v3m7x")
-amount = 150
+amount = 100
+texture = ExtResource("48_u16cs")
+lifetime = 5.0
+preprocess = 5.0
+process_material = SubResource("ParticleProcessMaterial_u16cs")
+
+[node name="FallingLeaves2" type="GPUParticles2D" parent="." unique_id=2070647793]
+material = SubResource("CanvasItemMaterial_v3m7x")
+amount = 100
+texture = ExtResource("49_iswue")
 lifetime = 5.0
 preprocess = 5.0
 process_material = SubResource("ParticleProcessMaterial_u16cs")

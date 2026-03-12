@@ -1,3 +1,24 @@
 [gd_scene format=3 uid="uid://c8yymy3r0u7f0"]
 
+[ext_resource type="Texture2D" uid="uid://dh2n2ecqyfx1p" path="res://assets/animated items/Moving grass tile.png" id="1_wtcfe"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0e48y"]
+texture = ExtResource("1_wtcfe")
+texture_region_size = Vector2i(32, 32)
+0:0/animation_columns = 4
+0:0/animation_speed = 10.0
+0:0/animation_frame_0/duration = 1.0
+0:0/animation_frame_1/duration = 1.0
+0:0/animation_frame_2/duration = 1.0
+0:0/animation_frame_3/duration = 1.0
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_epypp"]
+tile_size = Vector2i(32, 32)
+sources/2 = SubResource("TileSetAtlasSource_0e48y")
+
 [node name="Node2D" type="Node2D" unique_id=391175166]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=1950986415]
+tile_map_data = PackedByteArray(0, 0, 10, 0, 11, 0, 2, 0, 0, 0, 0, 0, 0, 0)
+tile_set = SubResource("TileSet_epypp")

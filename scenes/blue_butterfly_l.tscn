@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://dqtskug56efl6"]
+
+[ext_resource type="Texture2D" uid="uid://i6jpdvooivou" path="res://assets/animated items/BBF.png" id="1_1ov7m"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v1mwh"]
+atlas = ExtResource("1_1ov7m")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ekn4u"]
+atlas = ExtResource("1_1ov7m")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vlkrb"]
+atlas = ExtResource("1_1ov7m")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_68g8a"]
+atlas = ExtResource("1_1ov7m")
+region = Rect2(48, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_45daf"]
+atlas = ExtResource("1_1ov7m")
+region = Rect2(64, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0om8u"]
+atlas = ExtResource("1_1ov7m")
+region = Rect2(80, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xrlkl"]
+atlas = ExtResource("1_1ov7m")
+region = Rect2(96, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_crkmp"]
+atlas = ExtResource("1_1ov7m")
+region = Rect2(112, 0, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0sshn"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v1mwh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ekn4u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vlkrb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_68g8a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_45daf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0om8u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xrlkl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_crkmp")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
+
+[node name="BlueButterflyL" type="AnimatedSprite2D" unique_id=40579414]
+sprite_frames = SubResource("SpriteFrames_0sshn")
+frame_progress = 0.018966053
