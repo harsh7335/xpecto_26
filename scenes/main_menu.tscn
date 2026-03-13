@@ -30,6 +30,7 @@
 [ext_resource type="Texture2D" uid="uid://cm7j1uisjd2ct" path="res://assets/animated items/Quit_Play.png" id="27_hl5e0"]
 [ext_resource type="FontFile" uid="uid://uqjv5boxewj0" path="res://assets/Fonts/BLKCHCRY.TTF" id="28_engjn"]
 [ext_resource type="AudioStream" uid="uid://d3ybxoesi11e5" path="res://assets/SFX/computer-mouse-click.mp3" id="30_engjn"]
+[ext_resource type="FontFile" uid="uid://dk6boqvvb7go5" path="res://assets/Fonts/pixelFont-7-8x14-sproutLands.ttf" id="31_6h3lr"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_68b7m"]
 atlas = ExtResource("1_3wgol")
@@ -234,6 +235,19 @@ corner_radius_bottom_left = 16
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ip0br"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xyero"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tcusk"]
+bg_color = Color(0.3756505, 0.37565055, 0.37565038, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4puye"]
+bg_color = Color(0.65998423, 0.6599844, 0.6599841, 1)
+
 [node name="MainMenu" type="Control" unique_id=1793862967]
 layout_mode = 3
 anchors_preset = 15
@@ -294,5 +308,83 @@ vertical_alignment = 1
 [node name="ButtonClick" type="AudioStreamPlayer" parent="." unique_id=338945214]
 stream = ExtResource("30_engjn")
 
+[node name="TutorialButton" type="Button" parent="." unique_id=1604925290]
+layout_mode = 0
+offset_left = 460.0
+offset_top = 315.0
+offset_right = 646.0
+offset_bottom = 390.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("31_6h3lr")
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_xyero")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_tcusk")
+theme_override_styles/hover = SubResource("StyleBoxFlat_4puye")
+text = "Tutorial"
+
+[node name="TutorialOverlay" type="ColorRect" parent="." unique_id=1241460085]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.58431375)
+
+[node name="ScreenshotDisplay" type="TextureRect" parent="TutorialOverlay" unique_id=659003392]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -573.0
+offset_right = 575.0
+offset_bottom = 299.0
+grow_horizontal = 2
+
+[node name="DescriptionLabel" type="Label" parent="TutorialOverlay" unique_id=562956053]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -1.0
+offset_right = 20.0
+offset_bottom = 22.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Next" type="Button" parent="TutorialOverlay" unique_id=624737587]
+layout_mode = 0
+offset_left = 534.0
+offset_top = 484.0
+offset_right = 609.0
+offset_bottom = 515.0
+text = "Next"
+
+[node name="Previous" type="Button" parent="TutorialOverlay" unique_id=1502578692]
+layout_mode = 0
+offset_left = 230.0
+offset_top = 484.0
+offset_right = 305.0
+offset_bottom = 515.0
+text = "Previous"
+
+[node name="Close" type="Button" parent="TutorialOverlay" unique_id=2012039749]
+layout_mode = 0
+offset_left = 861.0
+offset_top = 484.0
+offset_right = 936.0
+offset_bottom = 515.0
+text = "Close"
+
 [connection signal="pressed" from="VBoxContainer/Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="VBoxContainer/Quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="TutorialButton" to="." method="_on_tutorial_button_pressed"]
+[connection signal="pressed" from="TutorialOverlay/Next" to="." method="_on_next_pressed"]
+[connection signal="pressed" from="TutorialOverlay/Previous" to="." method="_on_previous_pressed"]
+[connection signal="pressed" from="TutorialOverlay/Close" to="." method="_on_close_pressed"]

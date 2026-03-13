@@ -650,5 +650,5 @@ func update_hud():
 
 func _on_end_turn_button_pressed() -> void:
 	button_click.play()
-	await get_tree().create_timer(1)
+	await get_tree().create_timer(1).timeout
 	execute_enemy_turn()
