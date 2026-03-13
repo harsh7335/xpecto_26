@@ -58,6 +58,7 @@
 [ext_resource type="Shader" uid="uid://bhju76f1kguff" path="res://shaders/sunlight.gdshader" id="45_v3m7x"]
 [ext_resource type="Texture2D" uid="uid://c0ksorwka20cb" path="res://assets/animated items/Leaf_dry.png" id="48_u16cs"]
 [ext_resource type="Texture2D" uid="uid://bfmjog7ysqiuw" path="res://assets/animated items/Leaf_green.png" id="49_iswue"]
+[ext_resource type="Texture2D" uid="uid://bftxe5waeua3s" path="res://assets/animated items/Moving_grass_LB.png" id="55_q1kkk"]
 [ext_resource type="AudioStream" uid="uid://d03d1p78ef7nf" path="res://assets/SFX/freesound-community-digging-v1-27585_PjaaDgfW.mp3" id="59_x8sro"]
 [ext_resource type="AudioStream" uid="uid://x2i07co3lbfh" path="res://assets/SFX/waterslpash.mp3" id="60_8tp6v"]
 [ext_resource type="AudioStream" uid="uid://ctfkrdprcthop" path="res://assets/SFX/sizzle.mp3" id="61_j2h54"]
@@ -3309,6 +3310,18 @@ shader_parameter/mote_size = 0.07000000262648
 shader_parameter/mote_density = 0.44800001802012
 shader_parameter/mote_intensity = 4.0
 
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_mwyx6"]
+texture = ExtResource("55_q1kkk")
+texture_region_size = Vector2i(32, 32)
+0:0/animation_columns = 6
+0:0/animation_frame_0/duration = 1.0
+0:0/animation_frame_1/duration = 1.0
+0:0/animation_frame_2/duration = 1.0
+0:0/animation_frame_3/duration = 1.0
+0:0/animation_frame_4/duration = 1.0
+0:0/animation_frame_5/duration = 1.0
+0:0/0 = 0
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_6dptc"]
 texture = ExtResource("4_2yrkd")
 texture_region_size = Vector2i(64, 64)
@@ -3326,6 +3339,7 @@ texture_region_size = Vector2i(32, 32)
 tile_size = Vector2i(32, 32)
 sources/1 = SubResource("TileSetAtlasSource_6dptc")
 sources/2 = SubResource("TileSetAtlasSource_2yrkd")
+sources/0 = SubResource("TileSetAtlasSource_mwyx6")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kfnik"]
 texture = ExtResource("2_kfnik")

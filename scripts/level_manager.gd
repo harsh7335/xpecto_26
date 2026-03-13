@@ -1,5 +1,6 @@
 extends Node2D
 
+@export var light_start: Vector2i = Vector2i(0, 5)
 @export var max_trenches: int = 5
 @export var max_turns: int = 10
 @export var next_level_scene: PackedScene
@@ -94,7 +95,6 @@ var grid_data = []
 @onready var light_layer = $LightLayer
 @onready var objects_layer: TileMapLayer = $TileMapLayer3
 
-var light_start = Vector2i(0, 5)     # Starts at the left edge, middle row
 var light_direction = Vector2i(1, 0) # Moving right (x: 1, y: 0)
 
 var pump_pos = Vector2i(2, 0)
