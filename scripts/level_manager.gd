@@ -193,7 +193,7 @@ func _initialize_grid():
 					"alive": true
 				})
 				
-			elif object_id == ID_PUMP:
+			elif source_id == ID_PUMP:
 				state = TileState.PUMP
 				pump_pos = cell_pos 
 			
