@@ -63,9 +63,12 @@ animations = [{
 }],
 "loop": true,
 "name": &"default",
-"speed": 8.0
+"speed": 16.0
 }]
 
-[node name="BlueButterflyL" type="AnimatedSprite2D" unique_id=40579414]
+[node name="BlueButterflyL" type="Node2D" unique_id=2118722564]
+
+[node name="BlueButterflyL" type="AnimatedSprite2D" parent="." unique_id=40579414]
 sprite_frames = SubResource("SpriteFrames_0sshn")
+autoplay = "default"
 frame_progress = 0.018966053

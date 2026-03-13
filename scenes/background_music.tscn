@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://0tw7uk4hn5mt"]
+
+[ext_resource type="AudioStream" uid="uid://6tdkr0r5325a" path="res://assets/SFX/BG_Music.mp3" id="1_0rulj"]
+
+[node name="BackgroundMusic" type="AudioStreamPlayer" unique_id=1217166622]
+stream = ExtResource("1_0rulj")
+volume_db = -10.0
+autoplay = true

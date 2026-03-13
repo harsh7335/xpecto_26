@@ -5,6 +5,9 @@ extends Node2D
 @export var max_turns: int = 10
 @export var next_level_scene: PackedScene
 
+@onready var button_click: AudioStreamPlayer = $ButtonClick
+@onready var losing_sound: AudioStreamPlayer = $LosingSound
+@onready var winning_sound: AudioStreamPlayer = $WinningSound
 @onready var sfx_dig = $SfxDig
 @onready var sfx_fill = $SfxFill
 @onready var sfx_zap = $SfxZap
@@ -403,7 +406,8 @@ func calculate_light_beam():
 			print("ZAPPED A PEST at: ", current_pos, "!")
 			sfx_zap.play()
 			grid_data[current_pos.x][current_pos.y] = TileState.DIRT
-			tilemap.set_cell(current_pos, 1, Vector2i(0, 0))
+			objects_layer.set_cell(current_pos, -1)
+			tilemap.set_cell(current_pos, ID_DIRT1, Vector2i(0, 0))
 			for pest in active_pests:
 				if pest["current_pos"] == current_pos:
 					pest["alive"] = false
@@ -591,6 +595,7 @@ func check_game_state():
 	if active_crops.size() == 0:
 		print("GAME OVER! The pests ate all your crops!")
 		is_game_over = true
+		losing_sound.play()
 		loss_screen.visible = true
 		# We can add a "Restart Level" popup here later!
 		return
@@ -607,22 +612,30 @@ func check_game_state():
 		is_game_over = true
 		win_screen.visible = true
 		win_anim.play("WinScreen")
+		winning_sound.play()
 		print("LEVEL COMPLETE! All crops are fully grown!")
 	if turns_taken >= max_turns:
 		print("GAME OVER! You ran out of turns!")
 		is_game_over = true
+		losing_sound.play()
 		loss_screen.visible = true
 
 
 func _on_quit_button_pressed() -> void:
+	button_click.play()
+	await get_tree().create_timer(1).timeout
 	get_tree().quit()
 
 
 func _on_restart_button_pressed() -> void:
+	button_click.play()
+	await get_tree().create_timer(1).timeout
 	get_tree().reload_current_scene()
 
 
 func _on_next_level_button_pressed() -> void:
+	button_click.play()
+	await get_tree().create_timer(1).timeout
 	if next_level_scene != null:
 		print("Loading next level...")
 		get_tree().change_scene_to_packed(next_level_scene)
@@ -636,4 +649,6 @@ func update_hud():
 	turn_label.text = "Turns Left: " + str(turns_left)
 
 func _on_end_turn_button_pressed() -> void:
+	button_click.play()
+	await get_tree().create_timer(1)
 	execute_enemy_turn()

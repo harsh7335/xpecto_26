@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="xpecto_26_jam"
-run/main_scene="uid://c8yymy3r0u7f0"
+run/main_scene="uid://cggmyj261ys1x"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+BackgroundMusic="*uid://0tw7uk4hn5mt"
 
 [display]
 

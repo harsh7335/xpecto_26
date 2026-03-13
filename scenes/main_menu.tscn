@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cggmyj261ys1x"]
 
 [ext_resource type="Texture2D" uid="uid://jsuxhr0gqkgq" path="res://assets/animated items/Main_screen1.png" id="1_3wgol"]
+[ext_resource type="Script" uid="uid://tdxoju7lyg8i" path="res://scripts/main_menu.gd" id="1_hl5e0"]
 [ext_resource type="Texture2D" uid="uid://jd8h2k28xv1r" path="res://assets/animated items/Main_screen2.png" id="2_1acrt"]
 [ext_resource type="Texture2D" uid="uid://dx0o8erbriegv" path="res://assets/animated items/Main_screen3.png" id="3_vr8o3"]
 [ext_resource type="Texture2D" uid="uid://bud0iyo1oja77" path="res://assets/animated items/Main_screen4.png" id="4_1a85y"]
@@ -25,6 +26,10 @@
 [ext_resource type="Texture2D" uid="uid://ye8l4rg2u5dd" path="res://assets/animated items/Main_screen23.png" id="23_764ux"]
 [ext_resource type="Texture2D" uid="uid://dtd887rnfmlda" path="res://assets/animated items/Main_screen24.png" id="24_wadof"]
 [ext_resource type="Texture2D" uid="uid://bap0s7cp3rokj" path="res://assets/animated items/Main_screen25.png" id="25_b4jiv"]
+[ext_resource type="Texture2D" uid="uid://piewb3ylpsdk" path="res://assets/inanimate items/Play_Start.png" id="26_1a85y"]
+[ext_resource type="Texture2D" uid="uid://cm7j1uisjd2ct" path="res://assets/animated items/Quit_Play.png" id="27_hl5e0"]
+[ext_resource type="FontFile" uid="uid://uqjv5boxewj0" path="res://assets/Fonts/BLKCHCRY.TTF" id="28_engjn"]
+[ext_resource type="AudioStream" uid="uid://d3ybxoesi11e5" path="res://assets/SFX/computer-mouse-click.mp3" id="30_engjn"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_68b7m"]
 atlas = ExtResource("1_3wgol")
@@ -209,6 +214,26 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6h3lr"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dj67d"]
+bg_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6vcge"]
+bg_color = Color(0, 0.32156864, 0.65882355, 0.47058824)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ip0br"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
 [node name="MainMenu" type="Control" unique_id=1793862967]
 layout_mode = 3
 anchors_preset = 15
@@ -216,6 +241,58 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_hl5e0")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2017567831]
+position = Vector2(576, 324)
 sprite_frames = SubResource("SpriteFrames_g074s")
+autoplay = "default"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1538023829]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 113.0
+offset_top = -192.0
+offset_right = 377.0
+offset_bottom = 238.0
+grow_vertical = 2
+theme_override_constants/separation = 8
+
+[node name="Play" type="Button" parent="VBoxContainer" unique_id=436367287]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_6h3lr")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_dj67d")
+theme_override_styles/hover = SubResource("StyleBoxFlat_6vcge")
+theme_override_styles/focus = SubResource("StyleBoxFlat_ip0br")
+icon = ExtResource("26_1a85y")
+
+[node name="Quit" type="Button" parent="VBoxContainer" unique_id=1964793977]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_6h3lr")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_dj67d")
+theme_override_styles/hover = SubResource("StyleBoxFlat_6vcge")
+theme_override_styles/focus = SubResource("StyleBoxFlat_ip0br")
+icon = ExtResource("27_hl5e0")
+
+[node name="Label" type="Label" parent="." unique_id=162730918]
+layout_mode = 0
+offset_left = 646.0
+offset_top = 93.0
+offset_right = 1061.0
+offset_bottom = 268.0
+theme_override_fonts/font = ExtResource("28_engjn")
+theme_override_font_sizes/font_size = 68
+text = "LUMEN 
+HARVEST"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ButtonClick" type="AudioStreamPlayer" parent="." unique_id=338945214]
+stream = ExtResource("30_engjn")
+
+[connection signal="pressed" from="VBoxContainer/Play" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="VBoxContainer/Quit" to="." method="_on_quit_pressed"]
