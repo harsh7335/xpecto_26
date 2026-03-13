@@ -2,6 +2,7 @@ extends Node2D
 
 @export var max_trenches: int = 5
 @export var max_turns: int = 10
+@export var next_level_scene: PackedScene
 
 @onready var sfx_dig = $SfxDig
 @onready var sfx_fill = $SfxFill
@@ -10,6 +11,13 @@ extends Node2D
 @onready var sfx_plantgrowth: AudioStreamPlayer = $Sparkle
 @onready var sfx_scarecrow_rotating: AudioStreamPlayer = $ScarecrowRotating
 @onready var sfx_chomp: AudioStreamPlayer = $SfxChomp
+@onready var win_screen: Control = $UILayer/WinScreen
+@onready var loss_screen: Control = $UILayer/LossScreen
+@onready var win_anim: AnimatedSprite2D = $UILayer/WinScreen/AnimatedSprite2D
+@onready var trench_label: Label = $UILayer/HUD/TrenchLabel
+@onready var end_turn_button: Button = $UILayer/HUD/EndTurnButton
+@onready var turn_label: Label = $UILayer/HUD/TurnLabel
+
 
 var trenches_used: int = 0
 var turns_taken: int = 0
@@ -112,6 +120,7 @@ func _ready():
 	calculate_pest_intents()
 	update_trench_visuals()
 	update_scarecrow_visuals()
+	update_hud()
 
 func _process(delta): 
 	var mouse_pos = get_global_mouse_position()
@@ -252,6 +261,7 @@ func interact_with_cell(x: int, y: int):
 		if trenches_used < max_trenches:
 			grid_data[x][y] = TileState.TRENCH
 			trenches_used += 1 # Consume a trench
+			update_hud()
 			sfx_dig.play()
 			print("Dug a trench. Trenches used: ", trenches_used, "/", max_trenches)
 			
@@ -331,6 +341,7 @@ func fill_trench(x: int, y: int):
 		sfx_dig.play()
 		tilemap.set_cell(Vector2i(x, y), ID_DIRT1, Vector2i(0, 0))
 		trenches_used -= 1
+		update_hud()
 		print("Filled trench at: ", x, ", ", y)
 		
 		# 3. Recalculate! This will instantly dry up any yellow trenches that are no longer connected to the pump.
@@ -468,6 +479,7 @@ func _on_timer_timeout() -> void:
 func execute_enemy_turn():
 	print("--- ENEMY TURN EXECUTING ---")
 	turns_taken += 1
+	update_hud()
 	for pest in active_pests:
 		if not pest["alive"]:
 			continue
@@ -490,6 +502,8 @@ func execute_enemy_turn():
 	calculate_pest_intents()
 	calculate_light_beam()
 	check_game_state()
+	if is_game_over:
+		end_turn_button.visible = false
 
 func _is_trench_connection(x: int, y: int) -> bool:
 	if not _is_within_bounds(x, y): return false
@@ -577,6 +591,7 @@ func check_game_state():
 	if active_crops.size() == 0:
 		print("GAME OVER! The pests ate all your crops!")
 		is_game_over = true
+		loss_screen.visible = true
 		# We can add a "Restart Level" popup here later!
 		return
 		
@@ -590,7 +605,35 @@ func check_game_state():
 			
 	if all_crops_grown:
 		is_game_over = true
+		win_screen.visible = true
+		win_anim.play("WinScreen")
 		print("LEVEL COMPLETE! All crops are fully grown!")
 	if turns_taken >= max_turns:
 		print("GAME OVER! You ran out of turns!")
 		is_game_over = true
+		loss_screen.visible = true
+
+
+func _on_quit_button_pressed() -> void:
+	get_tree().quit()
+
+
+func _on_restart_button_pressed() -> void:
+	get_tree().reload_current_scene()
+
+
+func _on_next_level_button_pressed() -> void:
+	if next_level_scene != null:
+		print("Loading next level...")
+		get_tree().change_scene_to_packed(next_level_scene)
+	else:
+		print("YOU BEAT THE GAME! (Or you forgot to slot the next level in the Inspector!)")
+func update_hud():
+	var trenches_left = max_trenches - trenches_used
+	var turns_left = max_turns - turns_taken
+	
+	trench_label.text = "Trenches: " + str(trenches_left)
+	turn_label.text = "Turns Left: " + str(turns_left)
+
+func _on_end_turn_button_pressed() -> void:
+	execute_enemy_turn()

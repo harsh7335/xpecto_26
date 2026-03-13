@@ -65,6 +65,11 @@
 [ext_resource type="AudioStream" uid="uid://fmfyr3vgnybo" path="res://assets/SFX/errorsfx.mp3" id="63_a4f1w"]
 [ext_resource type="AudioStream" uid="uid://yd26re0wr2l6" path="res://assets/SFX/fairy_sparkle.mp3" id="64_dsowa"]
 [ext_resource type="AudioStream" uid="uid://cqxno2wbtm2h7" path="res://assets/SFX/wooden_crack.mp3" id="65_q1kkk"]
+[ext_resource type="Texture2D" uid="uid://kqu7ds62yrch" path="res://assets/animated items/Win.png" id="66_j2h54"]
+[ext_resource type="Texture2D" uid="uid://cgadqkouqnsgd" path="res://assets/inanimate items/Turn_change.png" id="67_dsowa"]
+[ext_resource type="Texture2D" uid="uid://ctqa8wt0r8s1m" path="res://assets/animated items/lost.png" id="67_yt4pb"]
+[ext_resource type="Texture2D" uid="uid://cm7j1uisjd2ct" path="res://assets/animated items/Quit_Play.png" id="68_yt4pb"]
+[ext_resource type="FontFile" uid="uid://dk6boqvvb7go5" path="res://assets/Fonts/pixelFont-7-8x14-sproutLands.ttf" id="69_a4f1w"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ugwvw"]
 texture = ExtResource("5_jt70k")
@@ -3361,6 +3366,118 @@ scale_max = 1.5
 turbulence_enabled = true
 turbulence_noise_strength = 0.5
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6psas"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nm48m"]
+bg_color = Color(0, 0, 0, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a4f1w"]
+atlas = ExtResource("66_j2h54")
+region = Rect2(0, 0, 1152, 648)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dsowa"]
+atlas = ExtResource("66_j2h54")
+region = Rect2(1152, 0, 1152, 648)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q1kkk"]
+atlas = ExtResource("66_j2h54")
+region = Rect2(2304, 0, 1152, 648)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hroa7"]
+atlas = ExtResource("66_j2h54")
+region = Rect2(3456, 0, 1152, 648)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2pr76"]
+atlas = ExtResource("66_j2h54")
+region = Rect2(4608, 0, 1152, 648)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5uwdf"]
+atlas = ExtResource("66_j2h54")
+region = Rect2(5760, 0, 1152, 648)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ak7uk"]
+atlas = ExtResource("66_j2h54")
+region = Rect2(6912, 0, 1152, 648)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6psas"]
+atlas = ExtResource("66_j2h54")
+region = Rect2(8064, 0, 1152, 648)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_nm48m"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a4f1w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dsowa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q1kkk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hroa7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2pr76")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5uwdf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ak7uk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6psas")
+}],
+"loop": true,
+"name": &"WinScreen",
+"speed": 8.0
+}]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_a4f1w"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2pr76"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5uwdf"]
+bg_color = Color(0.49573004, 0.6382003, 0.9996368, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ak7uk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dsowa"]
+bg_color = Color(0.9454482, 0.9454482, 0.9454482, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q1kkk"]
+bg_color = Color(0.33660764, 0.33660764, 0.33660755, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hroa7"]
+bg_color = Color(0.6109535, 0.61095357, 0.6109535, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2pr76"]
+
 [node name="LevelManager" type="Node2D" unique_id=93328618]
 script = ExtResource("1_06fa7")
 max_trenches = 10
@@ -3498,4 +3615,173 @@ volume_db = -10.0
 stream = ExtResource("65_q1kkk")
 volume_db = -10.0
 
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=373710809]
+
+[node name="HUD" type="Control" parent="UILayer" unique_id=50130346]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TrenchLabel" type="Label" parent="UILayer/HUD" unique_id=1718411681]
+layout_mode = 1
+offset_left = 75.0
+offset_top = 206.0
+offset_right = 163.0
+offset_bottom = 229.0
+theme_override_fonts/font = ExtResource("69_a4f1w")
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_6psas")
+text = "Trenches : 5"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TurnLabel" type="Label" parent="UILayer/HUD" unique_id=152642599]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -184.0
+offset_top = 206.0
+offset_right = -75.0
+offset_bottom = 229.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("69_a4f1w")
+theme_override_styles/normal = SubResource("StyleBoxFlat_nm48m")
+text = "Turns Left: 10"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="EndTurnButton" type="Button" parent="UILayer/HUD" unique_id=408873535]
+layout_mode = 0
+offset_left = 914.0
+offset_top = 199.0
+offset_right = 954.0
+offset_bottom = 239.0
+icon = ExtResource("67_dsowa")
+
+[node name="WinScreen" type="Control" parent="UILayer" unique_id=853868118]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="UILayer/WinScreen" unique_id=194815876]
+position = Vector2(576, 324)
+sprite_frames = SubResource("SpriteFrames_nm48m")
+animation = &"WinScreen"
+frame_progress = 0.92383665
+
+[node name="QuitButton" type="Button" parent="UILayer/WinScreen" unique_id=1682020601]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 60.0
+offset_top = -29.0
+offset_right = 316.0
+offset_bottom = 227.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_a4f1w")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_2pr76")
+theme_override_styles/hover = SubResource("StyleBoxFlat_5uwdf")
+theme_override_styles/focus = SubResource("StyleBoxFlat_ak7uk")
+icon = ExtResource("68_yt4pb")
+
+[node name="NextLevelButton" type="Button" parent="UILayer/WinScreen" unique_id=1555442714]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -285.0
+offset_top = 41.0
+offset_right = -44.0
+offset_bottom = 153.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("69_a4f1w")
+theme_override_font_sizes/font_size = 60
+theme_override_styles/normal = SubResource("StyleBoxFlat_dsowa")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_q1kkk")
+theme_override_styles/hover = SubResource("StyleBoxFlat_hroa7")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_2pr76")
+text = "Next"
+
+[node name="LossScreen" type="Control" parent="UILayer" unique_id=738159691]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="UILayer/LossScreen" unique_id=1497989668]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("67_yt4pb")
+
+[node name="QuitButton" type="Button" parent="UILayer/LossScreen" unique_id=1688456735]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 178.0
+offset_top = -25.0
+offset_right = 434.0
+offset_bottom = 231.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_a4f1w")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_2pr76")
+theme_override_styles/hover = SubResource("StyleBoxFlat_5uwdf")
+theme_override_styles/focus = SubResource("StyleBoxFlat_ak7uk")
+icon = ExtResource("68_yt4pb")
+
+[node name="RestartButton" type="Button" parent="UILayer/LossScreen" unique_id=1590236801]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -547.0
+offset_top = 56.0
+offset_right = -306.0
+offset_bottom = 168.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
+theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("69_a4f1w")
+theme_override_font_sizes/font_size = 60
+theme_override_styles/normal = SubResource("StyleBoxFlat_dsowa")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_q1kkk")
+theme_override_styles/hover = SubResource("StyleBoxFlat_hroa7")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_2pr76")
+text = "Retry"
+
 [connection signal="timeout" from="HighlightLayer/Timer" to="." method="_on_timer_timeout"]
+[connection signal="pressed" from="UILayer/HUD/EndTurnButton" to="." method="_on_end_turn_button_pressed"]
+[connection signal="pressed" from="UILayer/WinScreen/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="UILayer/WinScreen/NextLevelButton" to="." method="_on_next_level_button_pressed"]
+[connection signal="pressed" from="UILayer/LossScreen/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="UILayer/LossScreen/RestartButton" to="." method="_on_restart_button_pressed"]
