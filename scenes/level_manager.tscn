@@ -58,6 +58,13 @@
 [ext_resource type="Shader" uid="uid://bhju76f1kguff" path="res://shaders/sunlight.gdshader" id="45_v3m7x"]
 [ext_resource type="Texture2D" uid="uid://c0ksorwka20cb" path="res://assets/animated items/Leaf_dry.png" id="48_u16cs"]
 [ext_resource type="Texture2D" uid="uid://bfmjog7ysqiuw" path="res://assets/animated items/Leaf_green.png" id="49_iswue"]
+[ext_resource type="AudioStream" uid="uid://d03d1p78ef7nf" path="res://assets/SFX/freesound-community-digging-v1-27585_PjaaDgfW.mp3" id="59_x8sro"]
+[ext_resource type="AudioStream" uid="uid://x2i07co3lbfh" path="res://assets/SFX/waterslpash.mp3" id="60_8tp6v"]
+[ext_resource type="AudioStream" uid="uid://ctfkrdprcthop" path="res://assets/SFX/sizzle.mp3" id="61_j2h54"]
+[ext_resource type="AudioStream" uid="uid://lr0k4xcjfyel" path="res://assets/SFX/crunchybite.mp3" id="62_yt4pb"]
+[ext_resource type="AudioStream" uid="uid://fmfyr3vgnybo" path="res://assets/SFX/errorsfx.mp3" id="63_a4f1w"]
+[ext_resource type="AudioStream" uid="uid://yd26re0wr2l6" path="res://assets/SFX/fairy_sparkle.mp3" id="64_dsowa"]
+[ext_resource type="AudioStream" uid="uid://cqxno2wbtm2h7" path="res://assets/SFX/wooden_crack.mp3" id="65_q1kkk"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ugwvw"]
 texture = ExtResource("5_jt70k")
@@ -3464,13 +3471,31 @@ editor_only = false
 modulate = Color(0, 0, 0, 0.25490198)
 
 [node name="SfxDig" type="AudioStreamPlayer" parent="." unique_id=1217178934]
+stream = ExtResource("59_x8sro")
+volume_db = -10.0
 
 [node name="SfxFill" type="AudioStreamPlayer" parent="." unique_id=2145839412]
+stream = ExtResource("60_8tp6v")
+volume_db = -10.0
 
 [node name="SfxZap" type="AudioStreamPlayer" parent="." unique_id=628876796]
+stream = ExtResource("61_j2h54")
+volume_db = -20.0
 
 [node name="SfxChomp" type="AudioStreamPlayer" parent="." unique_id=845310608]
+stream = ExtResource("62_yt4pb")
+volume_db = -5.0
 
 [node name="SfxError" type="AudioStreamPlayer" parent="." unique_id=990904377]
+stream = ExtResource("63_a4f1w")
+volume_db = -10.0
+
+[node name="Sparkle" type="AudioStreamPlayer" parent="." unique_id=2012906348]
+stream = ExtResource("64_dsowa")
+volume_db = -10.0
+
+[node name="ScarecrowRotating" type="AudioStreamPlayer" parent="." unique_id=1676326704]
+stream = ExtResource("65_q1kkk")
+volume_db = -10.0
 
 [connection signal="timeout" from="HighlightLayer/Timer" to="." method="_on_timer_timeout"]

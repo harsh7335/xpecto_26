@@ -7,6 +7,10 @@ extends Node2D
 @onready var sfx_fill = $SfxFill
 @onready var sfx_zap = $SfxZap
 @onready var sfx_error = $SfxError
+@onready var sfx_plantgrowth: AudioStreamPlayer = $Sparkle
+@onready var sfx_scarecrow_rotating: AudioStreamPlayer = $ScarecrowRotating
+@onready var sfx_chomp: AudioStreamPlayer = $SfxChomp
+
 var trenches_used: int = 0
 var turns_taken: int = 0
 var is_game_over: bool = false
@@ -248,21 +252,25 @@ func interact_with_cell(x: int, y: int):
 		if trenches_used < max_trenches:
 			grid_data[x][y] = TileState.TRENCH
 			trenches_used += 1 # Consume a trench
+			sfx_dig.play()
 			print("Dug a trench. Trenches used: ", trenches_used, "/", max_trenches)
 			
 			calculate_water_flow()
 			calculate_light_beam()
 		else:
+			sfx_error.play()
 			print("You are out of trenches!")
 	
 	
 	elif grid_data[x][y] == TileState.MIRROR_SLASH:
 		grid_data[x][y] = TileState.MIRROR_BACKSLASH
+		sfx_scarecrow_rotating.play()
 		print("Rotated mirror to \\")
 		calculate_light_beam() # Recalculate the laser!
 		update_scarecrow_visuals()
 	elif grid_data[x][y] == TileState.MIRROR_BACKSLASH:
 		grid_data[x][y] = TileState.MIRROR_SLASH
+		sfx_scarecrow_rotating.play()
 		print("Rotated mirror to /")
 		calculate_light_beam()
 		update_scarecrow_visuals()
@@ -270,16 +278,18 @@ func interact_with_cell(x: int, y: int):
 	
 func calculate_water_flow():
 	# 1. THE RESET: Dry up all existing water first
+	var old_water_count = 0
 	for x in range(GRID_WIDTH):
 		for y in range(GRID_HEIGHT):
 			if grid_data[x][y] == TileState.WATERED_TRENCH:
+				old_water_count += 1
 				grid_data[x][y] = TileState.TRENCH
 				
 
 	# 2. THE SETUP: Create a queue for our BFS, starting at the pump
 	var queue = []
 	queue.append(pump_pos)
-	
+	var new_water_count = 0
 	# Directions we can flow: Right, Left, Down, Up
 	var directions = [
 		Vector2i(1, 0), Vector2i(-1, 0), 
@@ -301,12 +311,12 @@ func calculate_water_flow():
 				# If the neighbor is a dry trench, fill it!
 				if grid_data[neighbor_x][neighbor_y] == TileState.TRENCH:
 					# Update the logic
+					new_water_count += 1
 					grid_data[neighbor_x][neighbor_y] = TileState.WATERED_TRENCH
-					
-				
-					
 					# Add this newly wet trench to the queue so water can spread FROM it
 					queue.append(Vector2i(neighbor_x, neighbor_y))
+	if new_water_count > old_water_count:
+		sfx_fill.play()
 	update_crops()
 	update_trench_visuals()
 
@@ -318,6 +328,7 @@ func fill_trench(x: int, y: int):
 		
 		# 2. Update the visual back to the Red Square (Atlas 0,0). 
 		# Note: Make sure the Source ID here (the middle number) matches the '1' you used to fix the invisible tiles!
+		sfx_dig.play()
 		tilemap.set_cell(Vector2i(x, y), ID_DIRT1, Vector2i(0, 0))
 		trenches_used -= 1
 		print("Filled trench at: ", x, ", ", y)
@@ -379,6 +390,7 @@ func calculate_light_beam():
 		
 		elif cell_under_light == TileState.PEST:
 			print("ZAPPED A PEST at: ", current_pos, "!")
+			sfx_zap.play()
 			grid_data[current_pos.x][current_pos.y] = TileState.DIRT
 			tilemap.set_cell(current_pos, 1, Vector2i(0, 0))
 			for pest in active_pests:
@@ -472,6 +484,7 @@ func execute_enemy_turn():
 			# Max stage is 3 (Stages 0, 1, 2, 3)
 			if crop["stage"] < 3: 
 				crop["stage"] += 1
+				sfx_plantgrowth.play()
 				print("Crop at ", crop["pos"], " grew to stage ", crop["stage"])
 	attack_crops() 
 	calculate_pest_intents()
@@ -528,6 +541,7 @@ func attack_crops():
 				# Did we find a crop?
 				if grid_data[neighbor.x][neighbor.y] == TileState.CROP:
 					print("CHOMP! Pest at ", p_pos, " ate the crop at ", neighbor, "!")
+					sfx_chomp.play()
 					
 					# 1. Turn the crop back into dirt logically
 					grid_data[neighbor.x][neighbor.y] = TileState.DIRT
