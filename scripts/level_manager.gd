@@ -1,5 +1,12 @@
 extends Node2D
 
+@export var max_trenches: int = 5
+@export var max_turns: int = 10
+
+var trenches_used: int = 0
+var turns_taken: int = 0
+var is_game_over: bool = false
+
 const GRID_WIDTH = 12
 const GRID_HEIGHT = 10
 
@@ -153,6 +160,9 @@ func _process(delta):
 func _initialize_grid():
 	# 1. Clear out any old data (great for when you add a "Restart Level" button later!)
 	grid_data.clear()
+	trenches_used = 0
+	turns_taken = 0
+	is_game_over = false
 	active_pests.clear()
 	active_crops.clear()
 	
@@ -209,6 +219,8 @@ func _initialize_grid():
 		grid_data.append(column)
 	
 func _unhandled_input(event):
+	if is_game_over: return
+	
 	if event.is_action_pressed("ui_accept"): 
 		execute_enemy_turn()
 	
@@ -229,12 +241,15 @@ func _is_within_bounds(x: int, y: int) -> bool:
 func interact_with_cell(x: int, y: int):
 	# If the cell is dirt, dig a trench!
 	if grid_data[x][y] == TileState.DIRT:
-		grid_data[x][y] = TileState.TRENCH
-		
-		print("Dug a trench at: ", x, ", ", y)
-		
-		calculate_water_flow()
-		calculate_light_beam()
+		if trenches_used < max_trenches:
+			grid_data[x][y] = TileState.TRENCH
+			trenches_used += 1 # Consume a trench
+			print("Dug a trench. Trenches used: ", trenches_used, "/", max_trenches)
+			
+			calculate_water_flow()
+			calculate_light_beam()
+		else:
+			print("You are out of trenches!")
 	
 	
 	elif grid_data[x][y] == TileState.MIRROR_SLASH:
@@ -300,7 +315,7 @@ func fill_trench(x: int, y: int):
 		# 2. Update the visual back to the Red Square (Atlas 0,0). 
 		# Note: Make sure the Source ID here (the middle number) matches the '1' you used to fix the invisible tiles!
 		tilemap.set_cell(Vector2i(x, y), ID_DIRT1, Vector2i(0, 0))
-			
+		trenches_used -= 1
 		print("Filled trench at: ", x, ", ", y)
 		
 		# 3. Recalculate! This will instantly dry up any yellow trenches that are no longer connected to the pump.
@@ -436,6 +451,7 @@ func _on_timer_timeout() -> void:
 
 func execute_enemy_turn():
 	print("--- ENEMY TURN EXECUTING ---")
+	turns_taken += 1
 	for pest in active_pests:
 		if not pest["alive"]:
 			continue
@@ -542,6 +558,7 @@ func check_game_state():
 	# If the bugs ate everything and the list is empty...
 	if active_crops.size() == 0:
 		print("GAME OVER! The pests ate all your crops!")
+		is_game_over = true
 		# We can add a "Restart Level" popup here later!
 		return
 		
@@ -554,5 +571,8 @@ func check_game_state():
 			break # Found a small crop, no need to keep checking!
 			
 	if all_crops_grown:
+		is_game_over = true
 		print("LEVEL COMPLETE! All crops are fully grown!")
-		# We can load the next level here later!
+	if turns_taken >= max_turns:
+		print("GAME OVER! You ran out of turns!")
+		is_game_over = true

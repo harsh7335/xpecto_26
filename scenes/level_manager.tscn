@@ -3356,6 +3356,7 @@ turbulence_noise_strength = 0.5
 
 [node name="LevelManager" type="Node2D" unique_id=93328618]
 script = ExtResource("1_06fa7")
+max_trenches = 10
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1624653440]
 position = Vector2(192, 160)
@@ -3447,7 +3448,7 @@ preprocess = 5.0
 process_material = SubResource("ParticleProcessMaterial_u16cs")
 
 [node name="HoverCursor" type="Sprite2D" parent="." unique_id=1583077356]
-scale = Vector2(1.1, 1.1)
+scale = Vector2(1.05, 1.05)
 
 [node name="Frame" type="ReferenceRect" parent="HoverCursor" unique_id=60900474]
 offset_left = -16.0
