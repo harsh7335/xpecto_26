@@ -3,6 +3,10 @@ extends Node2D
 @export var max_trenches: int = 5
 @export var max_turns: int = 10
 
+@onready var sfx_dig = $SfxDig
+@onready var sfx_fill = $SfxFill
+@onready var sfx_zap = $SfxZap
+@onready var sfx_error = $SfxError
 var trenches_used: int = 0
 var turns_taken: int = 0
 var is_game_over: bool = false

@@ -3463,4 +3463,14 @@ editor_only = false
 [node name="Shadow" type="Sprite2D" parent="HoverCursor" unique_id=1088673964]
 modulate = Color(0, 0, 0, 0.25490198)
 
+[node name="SfxDig" type="AudioStreamPlayer" parent="." unique_id=1217178934]
+
+[node name="SfxFill" type="AudioStreamPlayer" parent="." unique_id=2145839412]
+
+[node name="SfxZap" type="AudioStreamPlayer" parent="." unique_id=628876796]
+
+[node name="SfxChomp" type="AudioStreamPlayer" parent="." unique_id=845310608]
+
+[node name="SfxError" type="AudioStreamPlayer" parent="." unique_id=990904377]
+
 [connection signal="timeout" from="HighlightLayer/Timer" to="." method="_on_timer_timeout"]
