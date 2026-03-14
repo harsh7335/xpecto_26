@@ -21,6 +21,7 @@ BackgroundMusic="*uid://0tw7uk4hn5mt"
 
 [display]
 
+window/stretch/mode="viewport"
 mouse_cursor/custom_image="uid://chs6egnvwfitk"
 
 [physics]

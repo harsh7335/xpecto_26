@@ -31,6 +31,7 @@
 [ext_resource type="FontFile" uid="uid://uqjv5boxewj0" path="res://assets/Fonts/BLKCHCRY.TTF" id="28_engjn"]
 [ext_resource type="AudioStream" uid="uid://d3ybxoesi11e5" path="res://assets/SFX/computer-mouse-click.mp3" id="30_engjn"]
 [ext_resource type="FontFile" uid="uid://dk6boqvvb7go5" path="res://assets/Fonts/pixelFont-7-8x14-sproutLands.ttf" id="31_6h3lr"]
+[ext_resource type="Texture2D" uid="uid://djt8pme47o34a" path="res://assets/animated items/Tutorial.png" id="32_dj67d"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_68b7m"]
 atlas = ExtResource("1_3wgol")
@@ -236,17 +237,17 @@ corner_radius_bottom_left = 16
 bg_color = Color(0.6, 0.6, 0.6, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xyero"]
-bg_color = Color(1, 1, 1, 1)
+bg_color = Color(1, 1, 1, 0)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tcusk"]
-bg_color = Color(0.3756505, 0.37565055, 0.37565038, 1)
+bg_color = Color(0.23351067, 9.029329e-05, 0.82752174, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4puye"]
-bg_color = Color(0.65998423, 0.6599844, 0.6599841, 1)
+bg_color = Color(0.28235295, 0.627451, 0.92941177, 0.43137255)
 
 [node name="MainMenu" type="Control" unique_id=1793862967]
 layout_mode = 3
@@ -310,10 +311,11 @@ stream = ExtResource("30_engjn")
 
 [node name="TutorialButton" type="Button" parent="." unique_id=1604925290]
 layout_mode = 0
-offset_left = 460.0
-offset_top = 315.0
-offset_right = 646.0
-offset_bottom = 390.0
+offset_left = 388.0
+offset_top = 270.0
+offset_right = 644.0
+offset_bottom = 526.0
+scale = Vector2(0.8, 0.8)
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_colors/font_pressed_color = Color(0, 0, 0, 1)
 theme_override_colors/font_hover_color = Color(0, 0, 0, 1)
@@ -322,7 +324,7 @@ theme_override_font_sizes/font_size = 40
 theme_override_styles/normal = SubResource("StyleBoxFlat_xyero")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_tcusk")
 theme_override_styles/hover = SubResource("StyleBoxFlat_4puye")
-text = "Tutorial"
+icon = ExtResource("32_dj67d")
 
 [node name="TutorialOverlay" type="ColorRect" parent="." unique_id=1241460085]
 visible = false
