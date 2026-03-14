@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 BackgroundMusic="*uid://0tw7uk4hn5mt"
+SceneTransition="*uid://floh06xqwkl4"
 
 [display]
 
@@ -32,4 +33,6 @@ mouse_cursor/custom_image="uid://chs6egnvwfitk"
 
 textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
 environment/defaults/default_clear_color=Color(0.4141948, 0.22863513, 0, 1)

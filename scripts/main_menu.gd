@@ -31,7 +31,7 @@ var tutorial_pages = [
 	},
 	{
 		"image": preload("res://assets/Tutorial/Screenshot 2026-03-13 230901.png"), 
-		"text": "End Turns using spacebar or end turn button to grow crop"
+		"text": "7. End Turns using spacebar or end turn button to grow crop"
 	}
 ]
 func _ready():
@@ -48,17 +48,19 @@ func update_tutorial_display():
 
 func _on_play_pressed() -> void:
 	button_click.play()
-	await get_tree().create_timer(1).timeout
-	get_tree().change_scene_to_file("res://scenes/level_01.tscn")
+	await get_tree().create_timer(0.3).timeout
+	SceneTransition.change_scene("res://scenes/level_01.tscn")
 
 
 func _on_quit_pressed() -> void:
 	button_click.play()
-	await get_tree().create_timer(1).timeout
+	await get_tree().create_timer(0.3).timeout
 	get_tree().quit()
 
 
 func _on_tutorial_button_pressed() -> void:
+	button_click.play()
+	await get_tree().create_timer(0.3).timeout
 	current_page = 0 # Always start at page 1
 	update_tutorial_display()
 	tutorial_overlay.visible = true

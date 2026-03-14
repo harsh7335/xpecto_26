@@ -623,22 +623,23 @@ func check_game_state():
 
 func _on_quit_button_pressed() -> void:
 	button_click.play()
-	await get_tree().create_timer(1).timeout
+	await get_tree().create_timer(0.2).timeout
 	get_tree().quit()
 
 
 func _on_restart_button_pressed() -> void:
 	button_click.play()
-	await get_tree().create_timer(1).timeout
-	get_tree().reload_current_scene()
+	var current_level_path = get_tree().current_scene.scene_file_path
+	await get_tree().create_timer(0.2).timeout
+	SceneTransition.change_scene(current_level_path)
 
 
 func _on_next_level_button_pressed() -> void:
 	button_click.play()
-	await get_tree().create_timer(1).timeout
+	await get_tree().create_timer(0.2).timeout
 	if next_level_scene != null:
 		print("Loading next level...")
-		get_tree().change_scene_to_packed(next_level_scene)
+		SceneTransition.change_scene(next_level_scene.resource_path)
 	else:
 		print("YOU BEAT THE GAME! (Or you forgot to slot the next level in the Inspector!)")
 func update_hud():
@@ -650,5 +651,5 @@ func update_hud():
 
 func _on_end_turn_button_pressed() -> void:
 	button_click.play()
-	await get_tree().create_timer(1).timeout
+	await get_tree().create_timer(0.2).timeout
 	execute_enemy_turn()
